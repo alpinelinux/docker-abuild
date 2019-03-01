@@ -3,9 +3,15 @@
 set -e
 
 ## debug
-if [[ "$DOCKER_ABUILD_DEBUG" = "true" ]]; then
+if [ "$DOCKER_ABUILD_DEBUG" = "true" ]; then
   set -x
   PS4='$LINENO: '
+fi
+
+if [ "${PWD%aports/*}" = "$PWD" ]; then
+  echo "Error: expecting to be run from within an aports/ tree!"
+  echo "Could not find 'aports/' in the current path ($PWD)"
+  exit 1
 fi
 
 DOCKER_VOLUMES="
