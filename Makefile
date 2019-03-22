@@ -1,3 +1,5 @@
+.DEFAULT: build
+
 TAGS := $(shell \
 	curl -s https://registry.hub.docker.com/v1/repositories/alpine/tags \
 	| jq -r '.[].name' \
