@@ -8,20 +8,38 @@ if [ "$DOCKER_ABUILD_DEBUG" = "true" ]; then
   PS4='$LINENO: '
 fi
 
-if [ "${PWD%aports/*}" = "$PWD" ]; then
-  echo "Error: expecting to be run from within an aports/ tree!"
-  echo "Could not find 'aports/' in the current path ($PWD)"
+if [ "${PWD%*/aports*}" = "$PWD" ]; then
+  echo "Error: expecting to be run from within an aports tree!"
+  echo "Could not find '/aports' in the current path ($PWD)"
   exit 1
 fi
 
-DOCKER_VOLUMES="
-    -v $PWD:/cwd
+# use branch to figure out most appropriate alpine version
+if [ -z "$DOCKER_ABUILD_VERSION" ]; then
+  _ABUILD_BRANCH=$(git status | head -1)
+  _ABUILD_BRANCH="${_ABUILD_BRANCH##*[ /]}"
+  _ABUILD_BRANCH="${_ABUILD_BRANCH%-stable}"
+
+  case $_ABUILD_BRANCH in
+    [[:digit:]].[[:digit:]] )
+      _ALPINE_VERSION=$_ABUILD_BRANCH
+      ;;
+    * )
+      _ALPINE_VERSION=edge
+      ;;
+  esac
+else
+  _ALPINE_VERSION=$DOCKER_ABUILD_VERSION
+fi
+
+_ABUILD_DIR=${HOME}/.abuild/${_ALPINE_VERSION}
+_ABUILD_VOLUMES="
     -v ${HOME}/.abuild:/home/builder/.abuild
-    -v ${HOME}/.abuild/.cache:/var/cache/apk
-    -v ${HOME}/.abuild/.distfiles:/var/cache/distfiles
-    -v ${PWD%aports/*}aports:/home/builder/aports
-    -v ${PWD%aports/*}packages:/home/builder/packages
+    -v ${_ABUILD_DIR}/.cache:/var/cache/apk
+    -v ${_ABUILD_DIR}/.distfiles:/var/cache/distfiles
+    -v ${PWD%/aports*}/aports:/home/builder/aports
+    -v ${PWD%/aports*}/packages/${_ALPINE_VERSION}:/home/builder/packages
 "
 
-DOCKER="docker run -ti $DOCKER_VOLUMES -e DOCKER_ABUILD_DEBUG mor1/abuild"
-$DOCKER "$@"
+DOCKER="docker run -ti $_ABUILD_VOLUMES -e DOCKER_ABUILD_DEBUG $_ABUILD_ARGS"
+$DOCKER --workdir /home/builder/aports/${PWD#*/aports} mor1/abuild:$_ALPINE_VERSION "$@"
