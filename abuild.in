@@ -38,8 +38,8 @@ ABUILD_VOLUMES="
     -v ${PWD%/aports*}/aports:/home/builder/aports
 "
 if [ "$DOCKER_ABUILD_CACHE" = "true" ]; then
-  for v in bin etc lib sbin usr var; do
-    ABUILD_VOLUMES="$ABUILD_VOLUMES -v abuild-$ABUILD_VERSION-$v:/$v"
+  for v in %%ALPINE_VOLUMES%% ; do
+    ABUILD_VOLUMES="$ABUILD_VOLUMES -v abuild-$ABUILD_VERSION-${v//\//_}:/$v"
   done
 fi
 
