@@ -10,11 +10,12 @@ RUN adduser -D builder \
     && addgroup builder abuild \
     && echo 'builder ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
 
-COPY entrypoint.sh /home/builder
 RUN    echo /home/builder/packages/main      >> /etc/apk/repositories \
     && echo /home/builder/packages/community >> /etc/apk/repositories \
     && echo /home/builder/packages/testing   >> /etc/apk/repositories
 
 USER builder
 WORKDIR /home/builder
+COPY entrypoint.sh /home/builder
+RUN mkdir packages
 ENTRYPOINT ["/home/builder/entrypoint.sh"]
