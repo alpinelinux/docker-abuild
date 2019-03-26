@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Copyright (C) 2019 Richard Mortier <mort@cantab.net>
+# Licensed under the MIT License, https://opensource.org/licenses/MIT
+
 set -e
 
 ## debug
@@ -41,6 +44,7 @@ if [ "$DOCKER_ABUILD_CACHE" = "true" ]; then
   for v in %%ABUILD_VOLUMES%% ; do
     vol=abuild-$ABUILD_VERSION-${v//\//_}
     if [ "$DOCKER_ABUILD_CLEAN" = "true" ]; then
+      ## clean the cache if requested
       docker rm -f $(docker ps -qaf "volume=$vol") >/dev/null 2>/dev/null || true
       docker volume rm $vol >/dev/null
       docker volume create $vol >/dev/null
