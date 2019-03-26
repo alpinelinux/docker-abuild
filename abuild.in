@@ -39,7 +39,13 @@ ABUILD_VOLUMES="
 "
 if [ "$DOCKER_ABUILD_CACHE" = "true" ]; then
   for v in %%ALPINE_VOLUMES%% ; do
-    ABUILD_VOLUMES="$ABUILD_VOLUMES -v abuild-$ABUILD_VERSION-${v//\//_}:/$v"
+    vol=abuild-$ABUILD_VERSION-${v//\//_}
+    if [ "$DOCKER_ABUILD_CLEAN" = "true" ]; then
+      docker rm -f $(docker ps -qaf "volume=$vol") >/dev/null 2>/dev/null || true
+      docker volume rm $vol >/dev/null
+      docker volume create $vol >/dev/null
+    fi
+    ABUILD_VOLUMES="$ABUILD_VOLUMES -v $vol:/$v"
   done
 fi
 
