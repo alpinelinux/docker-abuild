@@ -2,31 +2,38 @@
 
 IMG = mor1/abuild
 VOLS = bin etc lib sbin usr var
-TAGS := $(shell \
-	curl -s https://registry.hub.docker.com/v1/repositories/alpine/tags \
-	| jq -r '.[].name' \
-)
-TAGS = edge
+# BRANCHES := $(shell \
+# 	curl -s https://api.github.com/repos/alpinelinux/aports/branches \
+# 	| jq -r '.[].name' \
+# )
+# TAGS := $(shell \
+# 	curl -s https://registry.hub.docker.com/v1/repositories/alpine/tags \
+# 	| jq -r '.[].name' \
+# )
+TAGS = 2.6 2.7 3.1 3.2 3.3 3.4 3.5 3.6 3.7 3.8 3.9 edge
 
 .PHONY: build
 build: $(patsubst %, build-%, $(TAGS))
 	sed 's/%%ALPINE_VOLUMES%%/$(VOLS)/' abuild.in >| abuild
+	chmod +x abuild
 
 .PHONY: build-%
 build-%:
 	sed 's/%%ALPINE_TAG%%/$*/' Dockerfile.in >| Dockerfile
-	for v in $(VOLS) ; do docker volume create alpine-$*-$$v ; done
 	DOCKER_BUILDKIT=1 docker build $$DOCKER_FLAGS -t $(IMG):$* .
+	for v in $(VOLS) ; do docker volume create abuild-$*-$$v ; done
 	$(RM) Dockerfile
 
 .PHONY: push
-push: build
+push:
 	docker push $(DOCKER_FLAGS) $(IMG)
 
 .PHONY: clean
 clean:
+	docker rmi -f $$(docker images -q $(IMG))
 	$(RM) Dockerfile
 
 .PHONY: distclean
 distclean: clean
 	docker rmi -f $$(docker images -q $(IMG))
+	docker rmi $$(docker volume ls --filter 'name=alpine-' -q)
