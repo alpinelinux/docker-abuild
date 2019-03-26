@@ -16,30 +16,30 @@ fi
 
 # use branch to figure out most appropriate alpine version
 if [ -z "$DOCKER_ABUILD_VERSION" ]; then
-  _ABUILD_BRANCH=$(git status | head -1)
-  _ABUILD_BRANCH="${_ABUILD_BRANCH##*[ /]}"
-  _ABUILD_BRANCH="${_ABUILD_BRANCH%-stable}"
+  ABUILD_BRANCH=$(git status | head -1)
+  ABUILD_BRANCH="${ABUILD_BRANCH##*[ /]}"
+  ABUILD_BRANCH="${ABUILD_BRANCH%-stable}"
 
-  case $_ABUILD_BRANCH in
+  case $ABUILD_BRANCH in
     [[:digit:]].[[:digit:]] )
-      _ALPINE_VERSION=$_ABUILD_BRANCH
+      ALPINE_VERSION=$ABUILD_BRANCH
       ;;
     * )
-      _ALPINE_VERSION=edge
+      ALPINE_VERSION=edge
       ;;
   esac
 else
-  _ALPINE_VERSION=$DOCKER_ABUILD_VERSION
+  ALPINE_VERSION=$DOCKER_ABUILD_VERSION
 fi
 
-_ABUILD_DIR=${HOME}/.abuild/${_ALPINE_VERSION}
-_ABUILD_VOLUMES="
+ABUILD_VOLUMES="
     -v ${HOME}/.abuild:/home/builder/.abuild
-    -v ${_ABUILD_DIR}/.cache:/var/cache/apk
-    -v ${_ABUILD_DIR}/.distfiles:/var/cache/distfiles
     -v ${PWD%/aports*}/aports:/home/builder/aports
-    -v ${PWD%/aports*}/packages/${_ALPINE_VERSION}:/home/builder/packages
 "
+for v in %%ALPINE_VOLUMES%%; do
+  ABUILD_VOLUMES="$ABUILD_VOLUMES -v alpine-$ALPINE_VERSION-$v:/$v"
+done
 
-DOCKER="docker run -ti $_ABUILD_VOLUMES -e DOCKER_ABUILD_DEBUG $_ABUILD_ARGS"
-$DOCKER --workdir /home/builder/aports/${PWD#*/aports} mor1/abuild:$_ALPINE_VERSION "$@"
+ABUILD_WORKDIR=/home/builder/aports${PWD#*/aports}
+DOCKER="docker run -ti $ABUILD_VOLUMES -e DOCKER_ABUILD_DEBUG $DOCKER_ABUILD_ARGS"
+$DOCKER --workdir $ABUILD_WORKDIR mor1/abuild:$ALPINE_VERSION "$@"
