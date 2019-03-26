@@ -8,38 +8,42 @@ if [ "$DOCKER_ABUILD_DEBUG" = "true" ]; then
   PS4='$LINENO: '
 fi
 
+## check running from within an `aports` tree
 if [ "${PWD%*/aports*}" = "$PWD" ]; then
   echo "Error: expecting to be run from within an aports tree!"
   echo "Could not find '/aports' in the current path ($PWD)"
   exit 1
 fi
 
-# use branch to figure out most appropriate alpine version
-if [ -z "$DOCKER_ABUILD_VERSION" ]; then
-  ABUILD_BRANCH=$(git status | head -1)
-  ABUILD_BRANCH="${ABUILD_BRANCH##*[ /]}"
-  ABUILD_BRANCH="${ABUILD_BRANCH%-stable}"
-
-  case $ABUILD_BRANCH in
-    [[:digit:]].[[:digit:]] )
-      ALPINE_VERSION=$ABUILD_BRANCH
+## use branch to figure out most appropriate alpine version
+if [ "$DOCKER_ABUILD_VERSION" ]; then
+  ABUILD_VERSION=$DOCKER_ABUILD_VERSION
+else
+  APORTS_BRANCH=$(git status | head -1)
+  APORTS_BRANCH="${APORTS_BRANCH##*[ /]}"
+  case $APORTS_BRANCH in
+    [[:digit:]].[[:digit:]]-stable )
+      ABUILD_VERSION=${APORTS_BRANCH%-stable}
       ;;
+
     * )
-      ALPINE_VERSION=edge
+      ABUILD_VERSION=edge
       ;;
   esac
-else
-  ALPINE_VERSION=$DOCKER_ABUILD_VERSION
 fi
 
+## setup volumes; use named volumes as cache if desired
 ABUILD_VOLUMES="
     -v ${HOME}/.abuild:/home/builder/.abuild
     -v ${PWD%/aports*}/aports:/home/builder/aports
 "
-for v in %%ALPINE_VOLUMES%%; do
-  ABUILD_VOLUMES="$ABUILD_VOLUMES -v alpine-$ALPINE_VERSION-$v:/$v"
-done
+if [ "$DOCKER_ABUILD_CACHE" = "true" ]; then
+  for v in bin etc lib sbin usr var; do
+    ABUILD_VOLUMES="$ABUILD_VOLUMES -v abuild-$ABUILD_VERSION-$v:/$v"
+  done
+fi
 
+## go!
 ABUILD_WORKDIR=/home/builder/aports${PWD#*/aports}
 DOCKER="docker run -ti $ABUILD_VOLUMES -e DOCKER_ABUILD_DEBUG $DOCKER_ABUILD_ARGS"
-$DOCKER --workdir $ABUILD_WORKDIR mor1/abuild:$ALPINE_VERSION "$@"
+$DOCKER --workdir $ABUILD_WORKDIR mor1/abuild:$ABUILD_VERSION "$@"
