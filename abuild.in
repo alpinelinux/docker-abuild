@@ -38,7 +38,7 @@ ABUILD_VOLUMES="
     -v ${PWD%/aports*}/aports:/home/builder/aports
 "
 if [ "$DOCKER_ABUILD_CACHE" = "true" ]; then
-  for v in %%ALPINE_VOLUMES%% ; do
+  for v in %%ABUILD_VOLUMES%% ; do
     vol=abuild-$ABUILD_VERSION-${v//\//_}
     if [ "$DOCKER_ABUILD_CLEAN" = "true" ]; then
       docker rm -f $(docker ps -qaf "volume=$vol") >/dev/null 2>/dev/null || true
@@ -52,4 +52,4 @@ fi
 ## go!
 ABUILD_WORKDIR=/home/builder/aports${PWD#*/aports}
 DOCKER="docker run -ti $ABUILD_VOLUMES -e DOCKER_ABUILD_DEBUG $DOCKER_ABUILD_ARGS"
-$DOCKER --workdir $ABUILD_WORKDIR mor1/abuild:$ABUILD_VERSION "$@"
+$DOCKER --workdir $ABUILD_WORKDIR %%ABUILD_IMAGE%%:$ABUILD_VERSION "$@"
