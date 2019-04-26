@@ -1,14 +1,14 @@
 .DEFAULT: build
 
 IMG = mor1/abuild
-VOLS = bin etc lib sbin usr var home/builder/packages
+VOLS = bin etc lib sbin usr var
 # BRANCHES := $(shell \
-# 	curl -s https://api.github.com/repos/alpinelinux/aports/branches \
-# 	| jq -r '.[].name' \
+#	curl -s https://api.github.com/repos/alpinelinux/aports/branches \
+#	| jq -r '.[].name' \
 # )
 # TAGS := $(shell \
-# 	curl -s https://registry.hub.docker.com/v1/repositories/alpine/tags \
-# 	| jq -r '.[].name' \
+#	curl -s https://registry.hub.docker.com/v1/repositories/alpine/tags \
+#	| jq -r '.[].name' \
 # )
 ## let's just manually specify some tags for now
 TAGS = 2.6 2.7 3.1 3.2 3.3 3.4 3.5 3.6 3.7 3.8 3.9 edge

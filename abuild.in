@@ -39,6 +39,7 @@ fi
 ABUILD_VOLUMES="
     -v ${HOME}/.abuild:/home/builder/.abuild
     -v ${PWD%/aports*}/aports:/home/builder/aports
+    -v ${PWD%/aports*}/packages:/home/builder/packages
 "
 if [ "$DOCKER_ABUILD_CACHE" = "true" ]; then
   for v in %%ABUILD_VOLUMES%% ; do
