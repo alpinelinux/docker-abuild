@@ -15,8 +15,8 @@ TAGS = 2.6 2.7 3.1 3.2 3.3 3.4 3.5 3.6 3.7 3.8 3.9 edge
 
 .PHONY: build
 build: $(patsubst %, build-%, $(TAGS))
-	sed 's!%%ABUILD_VOLUMES%%!$(VOLS)!;s!%%ABUILD_IMAGE%%!$(IMG)!' abuild.in >| abuild
-	chmod +x abuild
+	sed 's!%%ABUILD_VOLUMES%%!$(VOLS)!;s!%%ABUILD_IMAGE%%!$(IMG)!' dabuild.in >| dabuild
+	chmod +x dabuild
 
 .PHONY: build-%
 build-%:
@@ -32,7 +32,7 @@ push:
 .PHONY: clean
 clean:
 	docker rmi -f $$(docker images -q $(IMG)) || true
-	$(RM) Dockerfile abuild
+	$(RM) Dockerfile dabuild
 
 .PHONY: distclean
 distclean: clean
