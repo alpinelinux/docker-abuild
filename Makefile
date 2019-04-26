@@ -31,10 +31,10 @@ push:
 
 .PHONY: clean
 clean:
-	docker rmi -f $$(docker images -q $(IMG))
-	$(RM) Dockerfile
+	docker rmi -f $$(docker images -q $(IMG)) || true
+	$(RM) Dockerfile abuild
 
 .PHONY: distclean
 distclean: clean
-	docker rmi -f $$(docker images -q $(IMG))
-	docker rmi $$(docker volume ls --filter 'name=alpine-' -q)
+	docker rmi -f $$(docker images -q $(IMG)) || true
+	docker rmi $$(docker volume ls --filter 'name=alpine-' -q) || true
