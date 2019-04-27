@@ -3,7 +3,7 @@
 set -e
 
 ## debug
-if [ "$DOCKER_ABUILD_DEBUG" = "true" ]; then
+if [ "$DABUILD_DEBUG" = "true" ]; then
   set -x
   PS4='$LINENO: '
 fi
