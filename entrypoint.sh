@@ -13,4 +13,4 @@ if [ ! -r "$HOME/.abuild/abuild.conf" ]; then
   abuild-keygen -n -i -a
 fi
 
-abuild "$@"
+exec "$(command -v abuild)" "$@"
