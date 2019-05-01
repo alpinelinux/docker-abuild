@@ -5,6 +5,11 @@
 
 set -e
 
+die () {
+  printf "%s\n" "$*" >&2
+  exit 1
+}
+
 ## debug
 if [ "$DABUILD_DEBUG" = "true" ]; then
   set -x
@@ -13,8 +18,8 @@ fi
 
 ## check running from within an `aports` tree
 if [ "${PWD%*/aports*}" = "$PWD" ]; then
-  echo "Error: expecting to be run from within an aports tree!"
-  echo "Could not find '/aports' in the current path ($PWD)"
+  die "Error: expecting to be run from within an aports tree!" \
+      "Could not find '/aports' in the current path ($PWD)"
   exit 1
 fi
 
