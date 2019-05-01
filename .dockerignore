@@ -1,3 +1,4 @@
-Dockerfile.in
+*.in
+*.md
 Makefile
-abuild
+dabuild
