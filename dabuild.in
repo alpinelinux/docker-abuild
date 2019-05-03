@@ -50,11 +50,19 @@ if [ ! \( -d "$ABUILD_PACKAGES" -a -w "$ABUILD_PACKAGES" \) ]; then
 fi
 
 ## setup volumes; use named volumes as cache if desired
-ABUILD_VOLUMES="
-    -v ${HOME}/.abuild:/home/builder/.abuild
-    -v ${PWD%/aports*}/aports:/home/builder/aports
-    -v ${DABUILD_PACKAGES}:/home/builder/packages
-"
+printf -v ABUILD_VOLUMES "%s "\
+       "-v ${HOME}/.abuild:/home/builder/.abuild" \
+       "-v ${PWD%/aports*}/aports:/home/builder/aports" \
+       "-v ${ABUILD_PACKAGES}:/home/builder/packages"
+
+if [ -s "/etc/alpine-release" ]; then
+  printf -v ABUILD_VOLUMES "%s "\
+         $ABUILD_VOLUMES \
+         "-v /etc/abuild.conf:/etc/abuild.conf"\
+         "-v /var/cache/distfiles:/var/cache/distfiles"\
+         "-v /var/cache/apk:/var/cache/apk"
+fi
+
 if [ "$DABUILD_CACHE" = "true" ]; then
   for v in %%ABUILD_VOLUMES%% ; do
     vol=abuild-$ABUILD_VERSION-${v//\//_}
