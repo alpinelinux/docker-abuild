@@ -41,10 +41,11 @@ else
 fi
 
 ## check $DABUILD_PACKAGES is a writable directory
-DABUILD_PACKAGES=${DABUILD_PACKAGES:-${PWD%/aports*}/packages}
+ABUILD_PACKAGES=${DABUILD_PACKAGES:-${PWD%/aports*}/packages}
 
-if [ ! \( -d "$DABUILD_PACKAGES" -a -w "$DABUILD_PACKAGES" \) ]; then
+if [ ! \( -d "$ABUILD_PACKAGES" -a -w "$ABUILD_PACKAGES" \) ]; then
   die "Error: invalid packages directory specified!" \
+      "ABUILD_PACKAGES = '$ABUILD_PACKAGES'" \
       "DABUILD_PACKAGES = '$DABUILD_PACKAGES'"
 fi
 
