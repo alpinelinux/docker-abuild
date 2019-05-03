@@ -1,4 +1,7 @@
-.DEFAULT: dabuild
+# Copyright (C) 2019 Richard Mortier <mort@cantab.net>
+# Licensed under the MIT License, https://opensource.org/licenses/MIT
+
+.DEFAULT_GOAL := dabuild
 
 ORG = mor1
 IMG = $(ORG)/dabuild
