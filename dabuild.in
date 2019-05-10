@@ -68,7 +68,7 @@ if [ "$DABUILD_CACHE" = "true" ]; then
     vol=abuild-$ABUILD_VERSION-${v//\//_}
     if [ "$DABUILD_CLEAN" = "true" ]; then
       ## clean the cache if requested
-      docker rm -f $(docker ps -qaf "volume=$vol") >/dev/null 2>/dev/null || true
+      docker rm -f $(docker ps -qaf "volume=$vol") >/dev/null 2>&1 || true
       docker volume rm $vol >/dev/null
       docker volume create $vol >/dev/null
     fi
