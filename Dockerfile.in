@@ -5,14 +5,16 @@ RUN apk add --update-cache \
       alpine-conf \
       alpine-sdk \
     && setup-apkcache /var/cache/apk \
-    && setup-apkrepos -1
+
+RUN rm /etc/apk/repositories && setup-apkrepos -1 \
+    && printf -- '/home/builder/packages/%s\n' main community testing \
+    >> /etc/apk/repositories \
+    && sed -i 's!^#\(.*/testing\)$!\1!' /etc/apk/repositories \
+    && apk update
 
 RUN adduser -D builder \
     && addgroup builder abuild \
     && echo 'builder ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
-
-RUN printf -- '/home/builder/packages/%s\n' main community testing \
-    >> /etc/apk/repositories
 
 USER builder
 WORKDIR /home/builder
