@@ -1,16 +1,17 @@
 FROM alpine:%%ALPINE_TAG%%
 MAINTAINER Richard Mortier <mort@cantab.net>
 
+RUN rm /etc/apk/repositories \
+    && printf -- 'http://dl-cdn.alpinelinux.org/alpine/v%%ALPINE_TAG%%/%s\n' \
+      main community testing >> /etc/apk/repositories \
+    && printf -- '/home/builder/packages/%%ALPINE_TAG%%/%s\n' \
+      main community testing >> /etc/apk/repositories \
+    && sed -i 's!vedge!edge!g' /etc/apk/repositories
+
 RUN apk add --update-cache \
       alpine-conf \
       alpine-sdk \
-    && setup-apkcache /var/cache/apk \
-
-RUN rm /etc/apk/repositories && setup-apkrepos -1 \
-    && printf -- '/home/builder/packages/%s\n' main community testing \
-    >> /etc/apk/repositories \
-    && sed -i 's!^#\(.*/testing\)$!\1!' /etc/apk/repositories \
-    && apk update
+    && setup-apkcache /var/cache/apk
 
 RUN adduser -D builder \
     && addgroup builder abuild \
