@@ -4,9 +4,9 @@ A Docker-ised `abuild` for invocation from within an `aports/` tree. Attempts to
 
 ## Configuration
 
-The `dabuild` script is generated from `dabuild.in` on `make build`. This ensures synchronisation of volume names. By default, the `dabuild` script then uses the Docker image `mor1/abuild`. To use a different image, set the `IMG` variable in the `Makefile` and then `make build`.
+The `dabuild` script is generated from `dabuild.in` on `make dabuild`. This ensures synchronisation of volume names. By default, the `dabuild` script then uses the Docker image `mor1/dabuild`. To use a different image, set the `IMG` variable in the `Makefile` and then `make dabuild`.
 
-On invocation from within an `aports/` tree, the script will determine the root of the tree (`.../aports/`) and bind mount it into the container at `/home/builder/aports`. It also bind mounts `$HOME/.abuild` for configuration and `.../aports/../packages` for `abuild` output packages.
+On invocation from within an `aports/` tree, the script will determine the root of the tree (`.../aports/`) and bind mount it into the container at `/home/builder/aports`. It also bind mounts `$HOME/.abuild` for configuration and `.../aports/../packages` for `abuild` to output packages.
 
 ## Building without fetching
 
