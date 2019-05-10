@@ -4,7 +4,7 @@ MAINTAINER Richard Mortier <mort@cantab.net>
 RUN apk add --update-cache \
       alpine-conf \
       alpine-sdk \
-    && setup-apkcache /var/cache/apk \
+    && setup-apkcache /var/cache/apk
 
 RUN rm /etc/apk/repositories && setup-apkrepos -1 \
     && printf -- '/home/builder/packages/%s\n' main community testing \
