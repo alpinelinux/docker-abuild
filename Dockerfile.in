@@ -1,12 +1,14 @@
 FROM alpine:%%ALPINE_TAG%%
 MAINTAINER Richard Mortier <mort@cantab.net>
 
-RUN rm /etc/apk/repositories \
-    && printf -- 'http://dl-cdn.alpinelinux.org/alpine/v%%ALPINE_TAG%%/%s\n' \
-      main community testing >> /etc/apk/repositories \
-    && printf -- '/home/builder/packages/%%ALPINE_TAG%%/%s\n' \
-      main community testing >> /etc/apk/repositories \
-    && sed -i 's!vedge!edge!g' /etc/apk/repositories
+RUN rm /etc/apk/repositories && \
+    printf -- >> /etc/apk/repositories \
+      'http://dl-cdn.alpinelinux.org/alpine/v%%ALPINE_TAG%%/%s\n' \
+      main community $(test edge = "%%ALPINE_TAG%%" && echo testing) && \
+    sed -i -e 's!/vedge/!/edge/!' /etc/apk/repositories && \
+    printf -- >> /etc/apk/repositories \
+      '/home/builder/packages/%s\n' \
+      main community testing
 
 RUN apk add --update-cache \
       alpine-conf \
