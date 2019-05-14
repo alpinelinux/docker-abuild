@@ -26,7 +26,7 @@ dabuild: dabuild.in
 	chmod +x dabuild
 
 .PHONY: images
-images: $(patsubst %, build-%, $(TAGS)) push
+images: $(patsubst %, build-%, $(TAGS))
 
 .PHONY: build-%
 build-%:
