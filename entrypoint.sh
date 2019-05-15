@@ -13,4 +13,6 @@ if [ ! -r "$HOME/.abuild/abuild.conf" ]; then
   abuild-keygen -n -i -a
 fi
 
+cp -v "$HOME"/.abuild/*.pub /etc/apk/keys/
+
 exec "$(command -v abuild)" "$@"
