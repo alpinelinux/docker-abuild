@@ -41,12 +41,13 @@ else
 fi
 
 ## check $DABUILD_PACKAGES is a writable directory
-ABUILD_PACKAGES=${DABUILD_PACKAGES:-${PWD%/aports*}/packages}
+ABUILD_PACKAGES=${DABUILD_PACKAGES:-${PWD%/aports*}/packages/${ABUILD_VERSION}}
 
 if [ ! \( -d "$ABUILD_PACKAGES" -a -w "$ABUILD_PACKAGES" \) ]; then
-  die "Error: invalid packages directory specified!" \
-      "ABUILD_PACKAGES = '$ABUILD_PACKAGES'" \
-      "DABUILD_PACKAGES = '$DABUILD_PACKAGES'"
+  mkdir -p $ABUILD_PACKAGES \
+    || die "Error: invalid packages directory specified!" \
+           "ABUILD_PACKAGES = '$ABUILD_PACKAGES'" \
+           "DABUILD_PACKAGES = '$DABUILD_PACKAGES'"
 fi
 
 ## setup volumes; use named volumes as cache if desired
