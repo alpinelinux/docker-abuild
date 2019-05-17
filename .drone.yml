@@ -1,0 +1,288 @@
+---
+kind: pipeline
+name: x86
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: v3.6
+  image: plugins/docker
+  settings:
+    dockerfile: Dockerfiles/v3.6/x86/Dockerfile
+    password:
+      from_secret: docker_pass
+    repo: clandmeter/docker-abuild
+    tags: 3.6-x86
+    username:
+      from_secret: docker_user
+
+- name: v3.7
+  image: plugins/docker
+  settings:
+    dockerfile: Dockerfiles/v3.7/x86/Dockerfile
+    password:
+      from_secret: docker_pass
+    repo: clandmeter/docker-abuild
+    tags: 3.7-x86
+    username:
+      from_secret: docker_user
+
+- name: v3.8
+  image: plugins/docker
+  settings:
+    dockerfile: Dockerfiles/v3.8/x86/Dockerfile
+    password:
+      from_secret: docker_pass
+    repo: clandmeter/docker-abuild
+    tags: 3.8-x86
+    username:
+      from_secret: docker_user
+
+- name: v3.9
+  image: plugins/docker
+  settings:
+    dockerfile: Dockerfiles/v3.9/x86/Dockerfile
+    password:
+      from_secret: docker_pass
+    repo: clandmeter/docker-abuild
+    tags: 3.9-x86
+    username:
+      from_secret: docker_user
+
+- name: edge
+  image: plugins/docker
+  settings:
+    dockerfile: Dockerfiles/edge/x86/Dockerfile
+    password:
+      from_secret: docker_pass
+    repo: clandmeter/docker-abuild
+    tags: edge-x86
+    username:
+      from_secret: docker_user
+
+---
+kind: pipeline
+name: x86_64
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: v3.6
+  image: plugins/docker
+  settings:
+    dockerfile: Dockerfiles/v3.6/x86_64/Dockerfile
+    password:
+      from_secret: docker_pass
+    repo: clandmeter/docker-abuild
+    tags: 3.6-x86_64
+    username:
+      from_secret: docker_user
+
+- name: v3.7
+  image: plugins/docker
+  settings:
+    dockerfile: Dockerfiles/v3.7/x86_64/Dockerfile
+    password:
+      from_secret: docker_pass
+    repo: clandmeter/docker-abuild
+    tags: 3.7-x86_64
+    username:
+      from_secret: docker_user
+
+- name: v3.8
+  image: plugins/docker
+  settings:
+    dockerfile: Dockerfiles/v3.8/x86_64/Dockerfile
+    password:
+      from_secret: docker_pass
+    repo: clandmeter/docker-abuild
+    tags: 3.8-x86_64
+    username:
+      from_secret: docker_user
+
+- name: v3.9
+  image: plugins/docker
+  settings:
+    dockerfile: Dockerfiles/v3.9/x86_64/Dockerfile
+    password:
+      from_secret: docker_pass
+    repo: clandmeter/docker-abuild
+    tags: 3.9-x86_64
+    username:
+      from_secret: docker_user
+
+- name: edge
+  image: plugins/docker
+  settings:
+    dockerfile: Dockerfiles/edge/x86_64/Dockerfile
+    password:
+      from_secret: docker_pass
+    repo: clandmeter/docker-abuild
+    tags: edge-x86_64
+    username:
+      from_secret: docker_user
+
+---
+kind: pipeline
+name: aarch64
+
+platform:
+  os: linux
+  arch: arm64
+
+steps:
+- name: v3.6
+  image: plugins/docker
+  settings:
+    dockerfile: Dockerfiles/v3.6/aarch64/Dockerfile
+    password:
+      from_secret: docker_pass
+    repo: clandmeter/docker-abuild
+    tags: 3.6-aarch64
+    username:
+      from_secret: docker_user
+
+- name: v3.7
+  image: plugins/docker
+  settings:
+    dockerfile: Dockerfiles/v3.7/aarch64/Dockerfile
+    password:
+      from_secret: docker_pass
+    repo: clandmeter/docker-abuild
+    tags: 3.7-aarch64
+    username:
+      from_secret: docker_user
+
+- name: v3.8
+  image: plugins/docker
+  settings:
+    dockerfile: Dockerfiles/v3.8/aarch64/Dockerfile
+    password:
+      from_secret: docker_pass
+    repo: clandmeter/docker-abuild
+    tags: 3.8-aarch64
+    username:
+      from_secret: docker_user
+
+- name: v3.9
+  image: plugins/docker
+  settings:
+    dockerfile: Dockerfiles/v3.9/aarch64/Dockerfile
+    password:
+      from_secret: docker_pass
+    repo: clandmeter/docker-abuild
+    tags: 3.9-aarch64
+    username:
+      from_secret: docker_user
+
+- name: edge
+  image: plugins/docker
+  settings:
+    dockerfile: Dockerfiles/edge/aarch64/Dockerfile
+    password:
+      from_secret: docker_pass
+    repo: clandmeter/docker-abuild
+    tags: edge-aarch64
+    username:
+      from_secret: docker_user
+
+---
+kind: pipeline
+name: armhf
+
+platform:
+  os: linux
+  arch: arm
+
+steps:
+- name: v3.6
+  image: plugins/docker
+  settings:
+    dockerfile: Dockerfiles/v3.6/armhf/Dockerfile
+    password:
+      from_secret: docker_pass
+    repo: clandmeter/docker-abuild
+    tags: 3.6-armhf
+    username:
+      from_secret: docker_user
+
+- name: v3.7
+  image: plugins/docker
+  settings:
+    dockerfile: Dockerfiles/v3.7/armhf/Dockerfile
+    password:
+      from_secret: docker_pass
+    repo: clandmeter/docker-abuild
+    tags: 3.7-armhf
+    username:
+      from_secret: docker_user
+
+- name: v3.8
+  image: plugins/docker
+  settings:
+    dockerfile: Dockerfiles/v3.8/armhf/Dockerfile
+    password:
+      from_secret: docker_pass
+    repo: clandmeter/docker-abuild
+    tags: 3.8-armhf
+    username:
+      from_secret: docker_user
+
+- name: v3.9
+  image: plugins/docker
+  settings:
+    dockerfile: Dockerfiles/v3.9/armhf/Dockerfile
+    password:
+      from_secret: docker_pass
+    repo: clandmeter/docker-abuild
+    tags: 3.9-armhf
+    username:
+      from_secret: docker_user
+
+- name: edge
+  image: plugins/docker
+  settings:
+    dockerfile: Dockerfiles/edge/armhf/Dockerfile
+    password:
+      from_secret: docker_pass
+    repo: clandmeter/docker-abuild
+    tags: edge-armhf
+    username:
+      from_secret: docker_user
+
+---
+kind: pipeline
+name: armv7
+
+platform:
+  os: linux
+  arch: arm
+
+steps:
+- name: v3.9
+  image: plugins/docker
+  settings:
+    dockerfile: Dockerfiles/v3.9/armv7/Dockerfile
+    password:
+      from_secret: docker_pass
+    repo: clandmeter/docker-abuild
+    tags: 3.9-armv7
+    username:
+      from_secret: docker_user
+
+- name: edge
+  image: plugins/docker
+  settings:
+    dockerfile: Dockerfiles/edge/armv7/Dockerfile
+    password:
+      from_secret: docker_pass
+    repo: clandmeter/docker-abuild
+    tags: edge-armv7
+    username:
+      from_secret: docker_user
+
+...

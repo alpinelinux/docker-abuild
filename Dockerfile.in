@@ -3,9 +3,8 @@ MAINTAINER Richard Mortier <mort@cantab.net>
 
 RUN rm /etc/apk/repositories && \
     printf -- >> /etc/apk/repositories \
-      'http://dl-cdn.alpinelinux.org/alpine/v%%ALPINE_TAG%%/%s\n' \
+      'http://dl-cdn.alpinelinux.org/alpine/%%ALPINE_REL%%/%s\n' \
       main community $(test edge = "%%ALPINE_TAG%%" && echo testing) && \
-    sed -i -e 's!/vedge/!/edge/!' /etc/apk/repositories && \
     printf -- >> /etc/apk/repositories \
       '/home/builder/packages/%s\n' \
       main community testing

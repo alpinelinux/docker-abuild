@@ -30,7 +30,8 @@ images: $(patsubst %, build-%, $(TAGS))
 
 .PHONY: build-%
 build-%:
-	sed 's/%%ALPINE_TAG%%/$*/' Dockerfile.in >| Dockerfile
+	sed 's!%%ALPINE_TAG%%!$*!;s!%%ALPINE_REL%%!$(subst v,,$*)!' \
+		Dockerfile.in >| Dockerfile
 # XXX probably because I'm on an edge release of Docker for Mac with a beta
 # engine, DOCKER_BUILDKIT appears to have some strange behaviour so turning
 # it off for now
