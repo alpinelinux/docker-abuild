@@ -13,6 +13,8 @@ if [ ! -r "$HOME/.abuild/abuild.conf" ]; then
   abuild-keygen -n -i -a
 fi
 
+( . "$HOME/.abuild/abuild.conf" ; if [ ! -s "$PACKAGER_PRIVKEY" ]; then abuild-keygen -n -i -a; fi )
+
 sudo cp -v "$HOME"/.abuild/*.pub /etc/apk/keys/
 
 exec "$(command -v abuild)" "$@"
