@@ -23,6 +23,13 @@ if [ "${PWD%*/aports*}" = "$PWD" ]; then
   exit 1
 fi
 
+## allow setting of arch by env variable
+[ ! "$DABUILD_ARCH" ] && DABUILD_ARCH=$(uname -m)
+case "$DABUILD_ARCH" in
+  x86|x86_64|aarch64|armhf|armv7) ;;
+  *) die "Unsupported arch \"$DABUILD_ARCH\" detected." ;;
+esac
+
 ## use branch to figure out most appropriate alpine version
 if [ "$DABUILD_VERSION" ]; then
   ABUILD_VERSION=$DABUILD_VERSION
@@ -66,7 +73,7 @@ fi
 
 if [ "$DABUILD_CACHE" = "true" ]; then
   for v in %%ABUILD_VOLUMES%% ; do
-    vol=abuild-$ABUILD_VERSION-${v//\//_}
+    vol=abuild-$ABUILD_VERSION-$DABUILD_ARCH-${v//\//_}
     if [ "$DABUILD_CLEAN" = "true" ]; then
       ## clean the cache if requested
       docker rm -f $(docker ps -qaf "volume=$vol") >/dev/null 2>&1 || true
@@ -83,4 +90,5 @@ fi
 ## go!
 ABUILD_WORKDIR=/home/builder/aports${PWD#*/aports}
 DOCKER="docker run -ti $ABUILD_VOLUMES -e DABUILD_DEBUG $DABUILD_ARGS"
-$DOCKER --workdir $ABUILD_WORKDIR %%ABUILD_IMAGE%%:$ABUILD_VERSION "$@"
+$DOCKER --workdir $ABUILD_WORKDIR \
+	%%ABUILD_IMAGE%%:$ABUILD_VERSION-$DABUILD_ARCH "$@"
