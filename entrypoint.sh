@@ -10,11 +10,11 @@ fi
 
 ## generate signing keys on first run
 if [ ! -r "$HOME/.abuild/abuild.conf" ]; then
-  abuild-keygen -n -i -a
+  abuild-keygen -n -a
 fi
 
-( . "$HOME/.abuild/abuild.conf" ; if [ ! -s "$PACKAGER_PRIVKEY" ]; then abuild-keygen -n -i -a; fi )
+( . "$HOME/.abuild/abuild.conf" ; if [ ! -s "$PACKAGER_PRIVKEY" ]; then abuild-keygen -n -a; fi )
 
-sudo cp -v "$HOME"/.abuild/*.pub /etc/apk/keys/
+sudo cp -v "$HOME"/.abuild/*.rsa.pub /etc/apk/keys/
 
 exec "$(command -v abuild)" "$@"
