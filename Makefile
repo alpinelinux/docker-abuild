@@ -36,7 +36,6 @@ build-%:
 # engine, DOCKER_BUILDKIT appears to have some strange behaviour so turning
 # it off for now
 	DOCKER_BUILDKIT=0 docker build $$DOCKER_FLAGS -t $(IMG):$* .
-	for v in $(VOLS) ; do docker volume create abuild-$*-$${v//\//_} ; done
 	$(RM) Dockerfile
 
 .PHONY: push
