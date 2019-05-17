@@ -7,6 +7,11 @@ platform:
   arch: amd64
 
 steps:
+- name: dockerfiles
+  image: alpine
+  commands:
+  - ./dockerfiles.sh
+
 - name: v3.6
   image: plugins/docker
   settings:
@@ -71,6 +76,11 @@ platform:
   arch: amd64
 
 steps:
+- name: dockerfiles
+  image: alpine
+  commands:
+  - ./dockerfiles.sh
+
 - name: v3.6
   image: plugins/docker
   settings:
@@ -135,6 +145,11 @@ platform:
   arch: arm64
 
 steps:
+- name: dockerfiles
+  image: alpine
+  commands:
+  - ./dockerfiles.sh
+
 - name: v3.6
   image: plugins/docker
   settings:
@@ -199,6 +214,11 @@ platform:
   arch: arm
 
 steps:
+- name: dockerfiles
+  image: alpine
+  commands:
+  - ./dockerfiles.sh
+
 - name: v3.6
   image: plugins/docker
   settings:
@@ -263,6 +283,11 @@ platform:
   arch: arm
 
 steps:
+- name: dockerfiles
+  image: alpine
+  commands:
+  - ./dockerfiles.sh
+
 - name: v3.9
   image: plugins/docker
   settings:

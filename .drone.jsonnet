@@ -1,5 +1,5 @@
-local tags = [ 'v3.6', 'v3.7', 'v3.8', 'v3.9', 'edge' ];
-local tags_armv7 = [ 'v3.9', 'edge' ];
+local tags = ['v3.6', 'v3.7', 'v3.8', 'v3.9', 'edge'];
+local tags_armv7 = ['v3.9', 'edge'];
 
 local pipeline(arch, darch, tags) = {
   kind: 'pipeline',
@@ -9,6 +9,12 @@ local pipeline(arch, darch, tags) = {
     arch: darch,
   },
   steps: [
+    {
+      name: 'dockerfiles',
+      image: 'alpine',
+      commands: ['./dockerfiles.sh'],
+    },
+  ] + [
     {
       name: tag,
       image: 'plugins/docker',
@@ -20,7 +26,7 @@ local pipeline(arch, darch, tags) = {
           from_secret: 'docker_pass',
         },
         repo: 'clandmeter/docker-abuild',
-        tags: '%s-%s' % [ std.strReplace(tag,'v',''), arch],
+        tags: '%s-%s' % [std.strReplace(tag, 'v', ''), arch],
         dockerfile: 'Dockerfiles/%s/%s/Dockerfile' % [tag, arch],
       },
     }
