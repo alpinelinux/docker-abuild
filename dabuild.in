@@ -63,7 +63,7 @@ ABUILD_VOLUMES="-v ${HOME}/.abuild:/home/builder/.abuild \
   -v ${ABUILD_PACKAGES}:/home/builder/packages"
 
 if [ -f "/etc/abuild.conf" ]; then
-  ABUILD_VOLUMES="$ABUILD_VOLUMES -v /etc/abuild.conf:/etc/abuild.conf"
+  ABUILD_VOLUMES="$ABUILD_VOLUMES -v /etc/abuild.conf:/etc/abuild.conf:ro"
 fi
 
 if [ -w "/var/cache/distfiles" ]; then
