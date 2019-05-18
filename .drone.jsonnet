@@ -29,6 +29,7 @@ local pipeline(arch, darch, tags) = {
         tags: '%s-%s' % [std.strReplace(tag, 'v', ''), arch],
         dockerfile: 'Dockerfiles/%s/%s/Dockerfile' % [tag, arch],
       },
+      depends_on: ['dockerfiles'],
     }
     for tag in tags
   ],
