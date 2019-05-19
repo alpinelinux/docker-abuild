@@ -20,7 +20,7 @@ arch_to_image() {
 	esac
 }
 
-[ -d "Dockerfiles" ] && rm -rf Dockerfiles/*
+rm -rf Dockerfiles
 
 for REL in $RELEASES; do
 	for ARCH in $ARCHS; do
