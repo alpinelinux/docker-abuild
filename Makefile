@@ -15,7 +15,8 @@ VOLS = bin etc lib sbin usr var
 #	| jq -r '.[].name' \
 # )
 ## let's just manually specify some tags for now
-TAGS ?= 2.6 2.7 3.1 3.2 3.3 3.4 3.5 3.6 3.7 3.8 3.9 edge
+RELEASES ?= v2.6 v2.7 v3.1 v3.2 v3.3 v3.4 v3.5 v3.6 v3.7 v3.8 v3.9 edge
+ARCH := $(shell uname -m)
 
 .PHONY: all
 all: images dabuild
@@ -26,16 +27,17 @@ dabuild: dabuild.in
 	chmod +x dabuild
 
 .PHONY: images
-images: $(patsubst %, build-%, $(TAGS))
+images: $(patsubst %, build-%, $(RELEASES))
 
 .PHONY: build-%
 build-%:
-	sed 's!%%ALPINE_TAG%%!$*!;s!%%ALPINE_REL%%!$(subst v,,$*)!' \
+	sed 's!%%ALPINE_TAG%%!$(subst v,,$*)!;s!%%ALPINE_REL%%!$*!' \
 		Dockerfile.in >| Dockerfile
 # XXX probably because I'm on an edge release of Docker for Mac with a beta
 # engine, DOCKER_BUILDKIT appears to have some strange behaviour so turning
 # it off for now
-	DOCKER_BUILDKIT=0 docker build $$DOCKER_FLAGS -t $(IMG):$* .
+	DOCKER_BUILDKIT=0 docker build $$DOCKER_FLAGS \
+	  -t $(IMG):$(subst v,,$*)-$(ARCH) .
 	$(RM) Dockerfile
 
 .PHONY: push
