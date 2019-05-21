@@ -25,3 +25,5 @@ To clean the cache before continuing, invoke as
 ``` shell
 DABUILD_CACHE=true DABUILD_CLEAN=true abuild [options]
 ```
+
+[![Build Status](https://cloud.drone.io/api/badges/alpinelinux/docker-abuild/status.svg)](https://cloud.drone.io/alpinelinux/docker-abuild)
