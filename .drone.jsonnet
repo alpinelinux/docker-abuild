@@ -25,7 +25,7 @@ local pipeline(arch, darch, tags) = {
         password: {
           from_secret: 'docker_pass',
         },
-        repo: 'clandmeter/docker-abuild',
+        repo: 'alpinelinux/docker-abuild',
         tags: '%s-%s' % [std.strReplace(tag, 'v', ''), arch],
         dockerfile: 'Dockerfiles/%s/%s/Dockerfile' % [tag, arch],
       },

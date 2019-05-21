@@ -3,8 +3,8 @@
 
 .DEFAULT_GOAL := dabuild
 
-ORG = mor1
-IMG = $(ORG)/dabuild
+ORG = alpinelinux
+IMG = $(ORG)/docker-abuild
 VOLS = bin etc lib sbin usr var
 # BRANCHES := $(shell \
 #	curl -s https://api.github.com/repos/alpinelinux/aports/branches \

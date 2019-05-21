@@ -18,7 +18,7 @@ steps:
     dockerfile: Dockerfiles/v3.6/x86/Dockerfile
     password:
       from_secret: docker_pass
-    repo: clandmeter/docker-abuild
+    repo: alpinelinux/docker-abuild
     tags: 3.6-x86
     username:
       from_secret: docker_user
@@ -31,7 +31,7 @@ steps:
     dockerfile: Dockerfiles/v3.7/x86/Dockerfile
     password:
       from_secret: docker_pass
-    repo: clandmeter/docker-abuild
+    repo: alpinelinux/docker-abuild
     tags: 3.7-x86
     username:
       from_secret: docker_user
@@ -44,7 +44,7 @@ steps:
     dockerfile: Dockerfiles/v3.8/x86/Dockerfile
     password:
       from_secret: docker_pass
-    repo: clandmeter/docker-abuild
+    repo: alpinelinux/docker-abuild
     tags: 3.8-x86
     username:
       from_secret: docker_user
@@ -57,7 +57,7 @@ steps:
     dockerfile: Dockerfiles/v3.9/x86/Dockerfile
     password:
       from_secret: docker_pass
-    repo: clandmeter/docker-abuild
+    repo: alpinelinux/docker-abuild
     tags: 3.9-x86
     username:
       from_secret: docker_user
@@ -70,7 +70,7 @@ steps:
     dockerfile: Dockerfiles/edge/x86/Dockerfile
     password:
       from_secret: docker_pass
-    repo: clandmeter/docker-abuild
+    repo: alpinelinux/docker-abuild
     tags: edge-x86
     username:
       from_secret: docker_user
@@ -97,7 +97,7 @@ steps:
     dockerfile: Dockerfiles/v3.6/x86_64/Dockerfile
     password:
       from_secret: docker_pass
-    repo: clandmeter/docker-abuild
+    repo: alpinelinux/docker-abuild
     tags: 3.6-x86_64
     username:
       from_secret: docker_user
@@ -110,7 +110,7 @@ steps:
     dockerfile: Dockerfiles/v3.7/x86_64/Dockerfile
     password:
       from_secret: docker_pass
-    repo: clandmeter/docker-abuild
+    repo: alpinelinux/docker-abuild
     tags: 3.7-x86_64
     username:
       from_secret: docker_user
@@ -123,7 +123,7 @@ steps:
     dockerfile: Dockerfiles/v3.8/x86_64/Dockerfile
     password:
       from_secret: docker_pass
-    repo: clandmeter/docker-abuild
+    repo: alpinelinux/docker-abuild
     tags: 3.8-x86_64
     username:
       from_secret: docker_user
@@ -136,7 +136,7 @@ steps:
     dockerfile: Dockerfiles/v3.9/x86_64/Dockerfile
     password:
       from_secret: docker_pass
-    repo: clandmeter/docker-abuild
+    repo: alpinelinux/docker-abuild
     tags: 3.9-x86_64
     username:
       from_secret: docker_user
@@ -149,7 +149,7 @@ steps:
     dockerfile: Dockerfiles/edge/x86_64/Dockerfile
     password:
       from_secret: docker_pass
-    repo: clandmeter/docker-abuild
+    repo: alpinelinux/docker-abuild
     tags: edge-x86_64
     username:
       from_secret: docker_user
@@ -176,7 +176,7 @@ steps:
     dockerfile: Dockerfiles/v3.6/aarch64/Dockerfile
     password:
       from_secret: docker_pass
-    repo: clandmeter/docker-abuild
+    repo: alpinelinux/docker-abuild
     tags: 3.6-aarch64
     username:
       from_secret: docker_user
@@ -189,7 +189,7 @@ steps:
     dockerfile: Dockerfiles/v3.7/aarch64/Dockerfile
     password:
       from_secret: docker_pass
-    repo: clandmeter/docker-abuild
+    repo: alpinelinux/docker-abuild
     tags: 3.7-aarch64
     username:
       from_secret: docker_user
@@ -202,7 +202,7 @@ steps:
     dockerfile: Dockerfiles/v3.8/aarch64/Dockerfile
     password:
       from_secret: docker_pass
-    repo: clandmeter/docker-abuild
+    repo: alpinelinux/docker-abuild
     tags: 3.8-aarch64
     username:
       from_secret: docker_user
@@ -215,7 +215,7 @@ steps:
     dockerfile: Dockerfiles/v3.9/aarch64/Dockerfile
     password:
       from_secret: docker_pass
-    repo: clandmeter/docker-abuild
+    repo: alpinelinux/docker-abuild
     tags: 3.9-aarch64
     username:
       from_secret: docker_user
@@ -228,7 +228,7 @@ steps:
     dockerfile: Dockerfiles/edge/aarch64/Dockerfile
     password:
       from_secret: docker_pass
-    repo: clandmeter/docker-abuild
+    repo: alpinelinux/docker-abuild
     tags: edge-aarch64
     username:
       from_secret: docker_user
@@ -255,7 +255,7 @@ steps:
     dockerfile: Dockerfiles/v3.6/armhf/Dockerfile
     password:
       from_secret: docker_pass
-    repo: clandmeter/docker-abuild
+    repo: alpinelinux/docker-abuild
     tags: 3.6-armhf
     username:
       from_secret: docker_user
@@ -268,7 +268,7 @@ steps:
     dockerfile: Dockerfiles/v3.7/armhf/Dockerfile
     password:
       from_secret: docker_pass
-    repo: clandmeter/docker-abuild
+    repo: alpinelinux/docker-abuild
     tags: 3.7-armhf
     username:
       from_secret: docker_user
@@ -281,7 +281,7 @@ steps:
     dockerfile: Dockerfiles/v3.8/armhf/Dockerfile
     password:
       from_secret: docker_pass
-    repo: clandmeter/docker-abuild
+    repo: alpinelinux/docker-abuild
     tags: 3.8-armhf
     username:
       from_secret: docker_user
@@ -294,7 +294,7 @@ steps:
     dockerfile: Dockerfiles/v3.9/armhf/Dockerfile
     password:
       from_secret: docker_pass
-    repo: clandmeter/docker-abuild
+    repo: alpinelinux/docker-abuild
     tags: 3.9-armhf
     username:
       from_secret: docker_user
@@ -307,7 +307,7 @@ steps:
     dockerfile: Dockerfiles/edge/armhf/Dockerfile
     password:
       from_secret: docker_pass
-    repo: clandmeter/docker-abuild
+    repo: alpinelinux/docker-abuild
     tags: edge-armhf
     username:
       from_secret: docker_user
@@ -334,7 +334,7 @@ steps:
     dockerfile: Dockerfiles/v3.9/armv7/Dockerfile
     password:
       from_secret: docker_pass
-    repo: clandmeter/docker-abuild
+    repo: alpinelinux/docker-abuild
     tags: 3.9-armv7
     username:
       from_secret: docker_user
@@ -347,7 +347,7 @@ steps:
     dockerfile: Dockerfiles/edge/armv7/Dockerfile
     password:
       from_secret: docker_pass
-    repo: clandmeter/docker-abuild
+    repo: alpinelinux/docker-abuild
     tags: edge-armv7
     username:
       from_secret: docker_user
