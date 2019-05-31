@@ -12,6 +12,7 @@ RUN rm /etc/apk/repositories && \
 RUN apk add --update-cache \
       alpine-conf \
       alpine-sdk \
+    && apk upgrade -a \
     && setup-apkcache /var/cache/apk
 
 RUN adduser -D builder \
