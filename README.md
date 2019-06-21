@@ -27,3 +27,7 @@ DABUILD_CACHE=true DABUILD_CLEAN=true abuild [options]
 ```
 
 [![Build Status](https://cloud.drone.io/api/badges/alpinelinux/docker-abuild/status.svg)](https://cloud.drone.io/alpinelinux/docker-abuild)
+
+## Known Issues
+
+  * Docker doesn't support IPv6 well, so if a package's tests make use of IPv6 they are likely to fail. Observed with `community/libgdata` and [fixed](https://github.com/alpinelinux/aports/pull/7597).
