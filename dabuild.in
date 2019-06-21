@@ -88,7 +88,10 @@ if [ "$DABUILD_CACHE" = "true" ]; then
 fi
 
 ## go!
-ABUILD_WORKDIR=/home/builder/aports/${PWD#*/aports/}
-DOCKER="docker run -ti $ABUILD_VOLUMES -e DABUILD_DEBUG $DABUILD_ARGS"
-$DOCKER --workdir $ABUILD_WORKDIR \
-	%%ABUILD_IMAGE%%:$ABUILD_VERSION-$DABUILD_ARCH "$@"
+docker pull -q %%ABUILD_IMAGE%%:$ABUILD_VERSION-$DABUILD_ARCH
+
+docker run -ti \
+	   $ABUILD_VOLUMES \
+	   -e DABUILD_DEBUG $DABUILD_ARGS \
+	   -w /home/builder/aports${PWD#*/aports/} \
+	   %%ABUILD_IMAGE%%:$ABUILD_VERSION-$DABUILD_ARCH "$@"
