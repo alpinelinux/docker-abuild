@@ -6,16 +6,7 @@
 ORG = alpinelinux
 IMG = $(ORG)/docker-abuild
 VOLS = bin etc lib sbin usr var
-# BRANCHES := $(shell \
-#	curl -s https://api.github.com/repos/alpinelinux/aports/branches \
-#	| jq -r '.[].name' \
-# )
-# TAGS := $(shell \
-#	curl -s https://registry.hub.docker.com/v1/repositories/alpine/tags \
-#	| jq -r '.[].name' \
-# )
-## let's just manually specify some tags for now
-RELEASES ?= v2.6 v2.7 v3.1 v3.2 v3.3 v3.4 v3.5 v3.6 v3.7 v3.8 v3.9 edge
+RELEASES ?= $(addprefix v2.,6 7) $(addprefix v3.,1 2 3 4 5 6 7 8 9 10) edge
 ARCH := $(shell uname -m)
 
 .PHONY: all
