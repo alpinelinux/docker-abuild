@@ -32,5 +32,7 @@ fi
 
 sudo cp -v "$HOME"/.abuild/*.rsa.pub /etc/apk/keys/
 sudo apk -U upgrade -a
+# remove cached packages no longer in the index
+sudo apk cache clean
 
 exec "$(command -v abuild)" "$@"

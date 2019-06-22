@@ -60,7 +60,8 @@ fi
 ## setup volumes; use named volumes as cache if desired
 ABUILD_VOLUMES="-v ${HOME}/.abuild:/home/builder/.abuild \
   -v ${PWD%/aports/*}/aports:/home/builder/aports \
-  -v ${ABUILD_PACKAGES}:/home/builder/packages"
+  -v ${ABUILD_PACKAGES}:/home/builder/packages \
+  -v dabuild-apkcache-${ABUILD_VERSION}-${DABUILD_ARCH}:/var/cache/apk"
 
 if [ -f "/etc/abuild.conf" ]; then
   ABUILD_VOLUMES="$ABUILD_VOLUMES -v /etc/abuild.conf:/etc/abuild.conf:ro"
