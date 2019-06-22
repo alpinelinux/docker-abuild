@@ -22,6 +22,9 @@ steps:
     tags: 3.6-x86
     username:
       from_secret: docker_user
+  when:
+    branch:
+    - master
   depends_on:
   - dockerfiles
 
@@ -35,6 +38,9 @@ steps:
     tags: 3.7-x86
     username:
       from_secret: docker_user
+  when:
+    branch:
+    - master
   depends_on:
   - dockerfiles
 
@@ -48,6 +54,9 @@ steps:
     tags: 3.8-x86
     username:
       from_secret: docker_user
+  when:
+    branch:
+    - master
   depends_on:
   - dockerfiles
 
@@ -61,6 +70,25 @@ steps:
     tags: 3.9-x86
     username:
       from_secret: docker_user
+  when:
+    branch:
+    - master
+  depends_on:
+  - dockerfiles
+
+- name: v3.10
+  image: plugins/docker
+  settings:
+    dockerfile: Dockerfiles/v3.10/x86/Dockerfile
+    password:
+      from_secret: docker_pass
+    repo: alpinelinux/docker-abuild
+    tags: 3.10-x86
+    username:
+      from_secret: docker_user
+  when:
+    branch:
+    - master
   depends_on:
   - dockerfiles
 
@@ -74,6 +102,9 @@ steps:
     tags: edge-x86
     username:
       from_secret: docker_user
+  when:
+    branch:
+    - master
   depends_on:
   - dockerfiles
 
@@ -101,6 +132,9 @@ steps:
     tags: 3.6-x86_64
     username:
       from_secret: docker_user
+  when:
+    branch:
+    - master
   depends_on:
   - dockerfiles
 
@@ -114,6 +148,9 @@ steps:
     tags: 3.7-x86_64
     username:
       from_secret: docker_user
+  when:
+    branch:
+    - master
   depends_on:
   - dockerfiles
 
@@ -127,6 +164,9 @@ steps:
     tags: 3.8-x86_64
     username:
       from_secret: docker_user
+  when:
+    branch:
+    - master
   depends_on:
   - dockerfiles
 
@@ -140,6 +180,25 @@ steps:
     tags: 3.9-x86_64
     username:
       from_secret: docker_user
+  when:
+    branch:
+    - master
+  depends_on:
+  - dockerfiles
+
+- name: v3.10
+  image: plugins/docker
+  settings:
+    dockerfile: Dockerfiles/v3.10/x86_64/Dockerfile
+    password:
+      from_secret: docker_pass
+    repo: alpinelinux/docker-abuild
+    tags: 3.10-x86_64
+    username:
+      from_secret: docker_user
+  when:
+    branch:
+    - master
   depends_on:
   - dockerfiles
 
@@ -153,6 +212,9 @@ steps:
     tags: edge-x86_64
     username:
       from_secret: docker_user
+  when:
+    branch:
+    - master
   depends_on:
   - dockerfiles
 
@@ -180,6 +242,9 @@ steps:
     tags: 3.6-aarch64
     username:
       from_secret: docker_user
+  when:
+    branch:
+    - master
   depends_on:
   - dockerfiles
 
@@ -193,6 +258,9 @@ steps:
     tags: 3.7-aarch64
     username:
       from_secret: docker_user
+  when:
+    branch:
+    - master
   depends_on:
   - dockerfiles
 
@@ -206,6 +274,9 @@ steps:
     tags: 3.8-aarch64
     username:
       from_secret: docker_user
+  when:
+    branch:
+    - master
   depends_on:
   - dockerfiles
 
@@ -219,6 +290,25 @@ steps:
     tags: 3.9-aarch64
     username:
       from_secret: docker_user
+  when:
+    branch:
+    - master
+  depends_on:
+  - dockerfiles
+
+- name: v3.10
+  image: plugins/docker
+  settings:
+    dockerfile: Dockerfiles/v3.10/aarch64/Dockerfile
+    password:
+      from_secret: docker_pass
+    repo: alpinelinux/docker-abuild
+    tags: 3.10-aarch64
+    username:
+      from_secret: docker_user
+  when:
+    branch:
+    - master
   depends_on:
   - dockerfiles
 
@@ -232,6 +322,9 @@ steps:
     tags: edge-aarch64
     username:
       from_secret: docker_user
+  when:
+    branch:
+    - master
   depends_on:
   - dockerfiles
 
@@ -259,6 +352,9 @@ steps:
     tags: 3.6-armhf
     username:
       from_secret: docker_user
+  when:
+    branch:
+    - master
   depends_on:
   - dockerfiles
 
@@ -272,6 +368,9 @@ steps:
     tags: 3.7-armhf
     username:
       from_secret: docker_user
+  when:
+    branch:
+    - master
   depends_on:
   - dockerfiles
 
@@ -285,6 +384,9 @@ steps:
     tags: 3.8-armhf
     username:
       from_secret: docker_user
+  when:
+    branch:
+    - master
   depends_on:
   - dockerfiles
 
@@ -298,6 +400,25 @@ steps:
     tags: 3.9-armhf
     username:
       from_secret: docker_user
+  when:
+    branch:
+    - master
+  depends_on:
+  - dockerfiles
+
+- name: v3.10
+  image: plugins/docker
+  settings:
+    dockerfile: Dockerfiles/v3.10/armhf/Dockerfile
+    password:
+      from_secret: docker_pass
+    repo: alpinelinux/docker-abuild
+    tags: 3.10-armhf
+    username:
+      from_secret: docker_user
+  when:
+    branch:
+    - master
   depends_on:
   - dockerfiles
 
@@ -311,6 +432,9 @@ steps:
     tags: edge-armhf
     username:
       from_secret: docker_user
+  when:
+    branch:
+    - master
   depends_on:
   - dockerfiles
 
@@ -338,6 +462,25 @@ steps:
     tags: 3.9-armv7
     username:
       from_secret: docker_user
+  when:
+    branch:
+    - master
+  depends_on:
+  - dockerfiles
+
+- name: v3.10
+  image: plugins/docker
+  settings:
+    dockerfile: Dockerfiles/v3.10/armv7/Dockerfile
+    password:
+      from_secret: docker_pass
+    repo: alpinelinux/docker-abuild
+    tags: 3.10-armv7
+    username:
+      from_secret: docker_user
+  when:
+    branch:
+    - master
   depends_on:
   - dockerfiles
 
@@ -351,6 +494,9 @@ steps:
     tags: edge-armv7
     username:
       from_secret: docker_user
+  when:
+    branch:
+    - master
   depends_on:
   - dockerfiles
 
