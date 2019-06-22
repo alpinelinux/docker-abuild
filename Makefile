@@ -18,13 +18,16 @@ VOLS = bin etc lib sbin usr var
 RELEASES ?= v2.6 v2.7 v3.1 v3.2 v3.3 v3.4 v3.5 v3.6 v3.7 v3.8 v3.9 edge
 ARCH := $(shell uname -m)
 
-.PHONY: all
-all: images dabuild
-
 dabuild: dabuild.in
 	sed 's!%%ABUILD_VOLUMES%%!$(VOLS)!;s!%%ABUILD_IMAGE%%!$(IMG)!' \
 	  dabuild.in >| dabuild
 	chmod +x dabuild
+
+.drone.yml: .drone.jsonnet
+	docker run --rm -v '$(shell pwd):/pwd' -w /pwd drone/cli jsonnet --format --stream --source '$<' --target '$@.tmp' && test -s '$@.tmp' && install '$@.tmp' '$@' ; _rc=$$?; $(RM) '$@.tmp' ; exit $$_rc
+
+.PHONY: all
+all: images dabuild
 
 .PHONY: images
 images: $(patsubst %, build-%, $(RELEASES))
