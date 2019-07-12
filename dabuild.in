@@ -57,12 +57,24 @@ if [ ! \( -d "$ABUILD_PACKAGES" -a -w "$ABUILD_PACKAGES" \) ]; then
       "DABUILD_PACKAGES = '$DABUILD_PACKAGES'"
 fi
 
-## setup volumes; use named volumes as cache if desired
+## setup volumes; first, bind mounts from the host...
 ABUILD_VOLUMES="-v ${HOME}/.abuild:/home/builder/.abuild \
   -v ${PWD%/aports/*}/aports:/home/builder/aports \
   -v ${ABUILD_PACKAGES}:/home/builder/packages \
   -v dabuild-apkcache-${ABUILD_VERSION}-${DABUILD_ARCH}:/var/cache/apk"
 
+## ...a named volume to cache apk package updates...
+APKCACHE=abuild-${ABUILD_VERSION}-${DABUILD_ARCH}-apkcache
+if [ "$DABUILD_CLEAN" = "true" ]; then
+  docker rm -f $(docker ps -qaf "volume=$APKCACHE") >/dev/null 2>&1 || true
+  docker volume rm $APKCACHE >/dev/null
+fi
+if docker volume ls -f 'name=$APKCACHE' | grep $APKCACHE >/dev/null ; then
+  docker volume create $APKCACHE >/dev/null
+fi
+ABUILD_VOLUMES="$ABUILD_VOLUMES -v $APKCACHE:/var/cache/apk:rw"
+
+## ...a couple more bind mounts that probably only exist if host is alpine...
 if [ -f "/etc/abuild.conf" ]; then
   ABUILD_VOLUMES="$ABUILD_VOLUMES -v /etc/abuild.conf:/etc/abuild.conf:ro"
 fi
@@ -70,7 +82,6 @@ fi
 if [ -w "/var/cache/distfiles" ]; then
   ABUILD_VOLUMES="$ABUILD_VOLUMES -v /var/cache/distfiles:/var/cache/distfiles"
 fi
-
 
 ## ...use some named volumes if we want to cache changes
 if [ "$DABUILD_CACHE" = "true" ]; then
