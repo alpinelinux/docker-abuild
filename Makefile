@@ -23,11 +23,17 @@ dabuild: dabuild.in
 	  dabuild.in >| dabuild
 	chmod +x dabuild
 
-.drone.yml: .drone.jsonnet
-	docker run --rm -v '$(shell pwd):/pwd' -w /pwd drone/cli jsonnet --format --stream --source '$<' --target '$@.tmp' && test -s '$@.tmp' && install '$@.tmp' '$@' ; _rc=$$?; $(RM) '$@.tmp' ; exit $$_rc
-
 .PHONY: all
 all: images dabuild
+
+.drone.yml: .drone.jsonnet
+	docker run --rm -v '$(shell pwd):/pwd' -w /pwd \
+	  drone/cli jsonnet --format --stream --source '$<' --target '$@.tmp' \
+	  && test -s '$@.tmp' \
+	  && install '$@.tmp' '$@' \
+	  ; _rc=$$? \
+	  ; $(RM) '$@.tmp' \
+	  ; exit $$_rc
 
 .PHONY: images
 images: $(patsubst %, build-%, $(RELEASES))
