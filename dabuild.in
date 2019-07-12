@@ -101,7 +101,7 @@ if [ "$DABUILD_CACHE" = "true" ]; then
 fi
 
 ## go!
-docker pull -q %%ABUILD_IMG%%:$ABUILD_VERSION-$DABUILD_ARCH
+docker pull -q %%ABUILD_IMG%%:$ABUILD_VERSION-$DABUILD_ARCH 2>/dev/null || true
 
 docker run -ti \
 	   $ABUILD_VOLUMES \
