@@ -19,7 +19,7 @@ RELEASES ?= v2.6 v2.7 v3.1 v3.2 v3.3 v3.4 v3.5 v3.6 v3.7 v3.8 v3.9 v3.10 edge
 ARCH := $(shell uname -m)
 
 dabuild: dabuild.in
-	sed 's!%%ABUILD_VOLUMES%%!$(VOLS)!;s!%%ABUILD_IMAGE%%!$(IMG)!' \
+	sed 's!%%ABUILD_VOLS%%!$(VOLS)!;s!%%ABUILD_IMG%%!$(IMG)!' \
 	  dabuild.in >| dabuild
 	chmod +x dabuild
 

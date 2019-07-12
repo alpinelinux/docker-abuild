@@ -71,8 +71,10 @@ if [ -w "/var/cache/distfiles" ]; then
   ABUILD_VOLUMES="$ABUILD_VOLUMES -v /var/cache/distfiles:/var/cache/distfiles"
 fi
 
+
+## ...use some named volumes if we want to cache changes
 if [ "$DABUILD_CACHE" = "true" ]; then
-  for v in %%ABUILD_VOLUMES%% ; do
+  for v in %%ABUILD_VOLS%% ; do
     vol=abuild-$ABUILD_VERSION-$DABUILD_ARCH-${v//\//_}
     if [ "$DABUILD_CLEAN" = "true" ]; then
       ## clean the cache if requested
@@ -88,10 +90,10 @@ if [ "$DABUILD_CACHE" = "true" ]; then
 fi
 
 ## go!
-docker pull -q %%ABUILD_IMAGE%%:$ABUILD_VERSION-$DABUILD_ARCH
+docker pull -q %%ABUILD_IMG%%:$ABUILD_VERSION-$DABUILD_ARCH
 
 docker run -ti \
 	   $ABUILD_VOLUMES \
 	   -e DABUILD_DEBUG $DABUILD_ARGS \
 	   -w /home/builder/aports${PWD#*/aports/} \
-	   %%ABUILD_IMAGE%%:$ABUILD_VERSION-$DABUILD_ARCH "$@"
+	   %%ABUILD_IMG%%:$ABUILD_VERSION-$DABUILD_ARCH "$@"
