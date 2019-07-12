@@ -55,10 +55,14 @@ push:
 
 .PHONY: clean
 clean:
-	docker rmi -f $$(docker images -q $(IMG)) || true
 	$(RM) Dockerfile dabuild
+	docker rmi $$(docker images -q '*/docker-abuild') 2>/dev/null || true
+	docker volume rm $$(docker volume ls -f 'name=abuild-' -q) 2>/dev/null || true
 
 .PHONY: distclean
-distclean: clean
-	docker rmi -f $$(docker images -q $(IMG)) || true
-	docker rmi $$(docker volume ls --filter 'name=alpine-' -q) || true
+distclean:
+	@: $(shell sh -xc '\
+	  for vol in $$(docker volume ls -q --filter="name=abuild-"); do \
+	    docker rm $$(docker ps -qaf volume=$$vol); \
+	  done')
+	$(MAKE) clean
