@@ -3,7 +3,11 @@
 
 .DEFAULT_GOAL := dabuild
 
-ORG ?= alpinelinux
+DABUILD_ORG ?= alpinelinux
+DABUILD_ARCH ?= $(shell uname -m)
+DABUILD_RELS ?= v2.6 v2.7 v3.1 v3.2 v3.3 v3.4 v3.5 v3.6 v3.7 v3.8 v3.9 v3.10 edge
+
+ORG = $(DABUILD_ORG)
 IMG = $(ORG)/docker-abuild
 VOLS = bin etc lib sbin usr var
 # BRANCHES := $(shell \
@@ -15,8 +19,8 @@ VOLS = bin etc lib sbin usr var
 #	| jq -r '.[].name' \
 # )
 ## let's just manually specify some tags for now
-RELEASES ?= v2.6 v2.7 v3.1 v3.2 v3.3 v3.4 v3.5 v3.6 v3.7 v3.8 v3.9 v3.10 edge
-ARCH ?= $(shell uname -m)
+RELEASES = $(DABUILD_RELS)
+ARCH = $(DABUILD_ARCH)
 
 dabuild: dabuild.in
 	sed 's!%%ABUILD_VOLS%%!$(VOLS)!;s!%%ABUILD_IMG%%!$(IMG)!' \
