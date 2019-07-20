@@ -12,6 +12,7 @@ RUN rm /etc/apk/repositories && \
 RUN apk add --update-cache \
       alpine-conf \
       alpine-sdk \
+      ccache \
     && apk upgrade -a \
     && setup-apkcache /var/cache/apk
 
