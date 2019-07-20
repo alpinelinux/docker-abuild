@@ -60,6 +60,7 @@ fi
 ## setup volumes; use named volumes as cache if desired
 ABUILD_VOLUMES="-v ${HOME}/.abuild:/home/builder/.abuild \
   -v ${PWD%/aports*}/aports:/home/builder/aports \
+  -v ${HOME}/.ccache:/home/builder/.ccache \
   -v ${ABUILD_PACKAGES}:/home/builder/packages"
 
 if [ -f "/etc/abuild.conf" ]; then
