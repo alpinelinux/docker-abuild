@@ -6,7 +6,7 @@
 set -e
 
 die () {
-  printf "%s\n" "$*" >&2
+  printf >&2 "%s\n" "$@"
   exit 1
 }
 
