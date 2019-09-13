@@ -31,3 +31,4 @@ DABUILD_CACHE=true DABUILD_CLEAN=true abuild [options]
 ## Known Issues
 
   * Docker doesn't support IPv6 well, so if a package's tests make use of IPv6 they are likely to fail. Observed with `community/libgdata` and [fixed](https://github.com/alpinelinux/aports/pull/7597).
+  * Due to what appears to be an issue with Docker for Desktop (at least on OSX), packages that untar symlinks to files that appear later in the tarball fail after untarring. Observed with `main/bash`. Workaround: just rerun the build, leaving the untarred files in place.
