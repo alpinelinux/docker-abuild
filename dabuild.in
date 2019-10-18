@@ -86,6 +86,11 @@ if [ "$DABUILD_CACHE" = "true" ]; then
   done
 fi
 
+ABUILD_RM="--rm"
+if [ "$DABUILD_RM" = "false" ]; then
+  ABUILD_RM=""
+fi
+
 ## go!
 docker run --tty --interactive \
        $ABUILD_RM \
