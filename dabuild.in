@@ -27,7 +27,8 @@ fi
 [ ! "$DABUILD_ARCH" ] && DABUILD_ARCH=$(uname -m)
 case "$DABUILD_ARCH" in
   x86|x86_64|aarch64|armv6|armv7|armv7l|armv8 ) ;;
-  * ) die "Unsupported arch \"$DABUILD_ARCH\" detected." ;;
+  * ) die "Unsupported arch \"$DABUILD_ARCH\" detected." \
+          "Expected one of: x86|x86_64|aarch64|armv6|armv7|armv7l|armv8";;
 esac
 
 ## use branch to figure out most appropriate alpine version
