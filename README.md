@@ -4,6 +4,18 @@
 
 A Docker-ised `abuild` for invocation from within an `aports/` tree. Attempts to auto-detect which branch of `aports/` is checked out, and use an appropriately based container for running `abuild`.
 
+## Supported architectures
+
+Currently supported architectures are (as reported by `uname -m`):
+
+  * x86
+  * x86_64
+  * aarch64
+  * armv6
+  * armv7
+  * armv7l
+  * armv8
+
 ## Configuration
 
 The `dabuild` script is generated from `dabuild.in` on `make dabuild`. This ensures synchronisation of volume names. By default, the `dabuild` script then uses the Docker image `mor1/dabuild`. To use a different image, set the `IMG` variable in the `Makefile` and then `make dabuild`.
@@ -30,5 +42,5 @@ DABUILD_CACHE=true DABUILD_CLEAN=true abuild [options]
 
 ## Known Issues
 
-  * Docker doesn't support IPv6 well, so if a package's tests make use of IPv6 they are likely to fail. Observed with `community/libgdata` and [fixed](https://github.com/alpinelinux/aports/pull/7597).
-  * Due to what appears to be an issue with Docker for Desktop (at least on OSX), packages that untar symlinks to files that appear later in the tarball fail after untarring. Observed with `main/bash`. Workaround: just rerun the build, leaving the untarred files in place.
+  * Docker doesn't support IPv6 well, so if a package's tests make use of IPv6 they may well fail. Observed with `community/libgdata` and [fixed](https://github.com/alpinelinux/aports/pull/7597).
+  * Due to what appears to be an issue with Docker for Desktop (at least on OSX), packages that untar symlinks to files that appear later in the tarball fail after untarring. Observed with `main/bash`. Workaround: just rerun the build, leaving the untarred files in place. [Issue raised](https://github.com/alpinelinux/docker-abuild/issues/21).
