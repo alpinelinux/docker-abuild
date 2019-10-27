@@ -26,9 +26,10 @@ fi
 ## allow setting of arch by env variable
 [ ! "$DABUILD_ARCH" ] && DABUILD_ARCH=$(uname -m)
 case "$DABUILD_ARCH" in
-  x86|x86_64|aarch64|armv6|armv7|armv7l|armv8 ) ;;
+  x86|x86_64|aarch64|armhf|armv7 ) ;;
   * ) die "Unsupported arch \"$DABUILD_ARCH\" detected." \
-          "Expected one of: x86|x86_64|aarch64|armv6|armv7|armv7l|armv8";;
+          "Expected one of: x86|x86_64|aarch64|armhf|armv7" \
+          "You may force it setting DABUILD_ARCH=\"xxx\" in invocation";;
 esac
 
 ## use branch to figure out most appropriate alpine version
