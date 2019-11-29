@@ -32,6 +32,15 @@ case "$DABUILD_ARCH" in
           "You may force it setting DABUILD_ARCH=\"xxx\" in invocation";;
 esac
 
+## allow setting of `docker` command by env variable
+[ ! "$DABUILD_DOCKER" ] && DABUILD_DOCKER=docker
+case "$DABUILD_DOCKER" in
+  podman|docker ) ;;
+  * ) die "Unsupported docker CLI replacement \"$DABUILD_DOCKER\" detected." \
+          "Expected one of: docker|podman"
+      ;;
+esac
+
 ## use branch to figure out most appropriate alpine version
 if [ "$DABUILD_VERSION" ]; then
   ABUILD_VERSION=$DABUILD_VERSION
