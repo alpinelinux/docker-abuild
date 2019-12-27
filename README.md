@@ -4,17 +4,31 @@
 
 A Docker-ised `abuild` for invocation from within an `aports/` tree. Attempts to auto-detect which branch of `aports/` is checked out, and use an appropriately based container for running `abuild`.
 
+## Invocation
+
+When invoked, `dabuild` simply passes any flags through to `abuild` running in an Alpine container. The invocation of `dabuild` itself can be controlled to some extent via environment variables prefixed `DABUILD_`:
+
+  * `DABUILD_ARCH=x86|x86_64|aarch64|armhf|armv7`. Specifies architecture for build container. Default: `$(uname -m)`.
+  * `DABUILD_ARGS=...`. Passed through to the container `run` command line.
+  * `DABUILD_CACHE=true|...`. Create and use Docker named volumes as caches for the running container, persisting changes across invocations. Default: `false`.
+  * `DABUILD_CLEAN=true`. If set while `DABUILD_CACHE=true` then remove and recreate the volumes acting as caches. Default: `false`.
+  * `DABUILD_DEBUG=true`. Spew debug output to `stdout`. Default: `false`.
+  * `DABUILD_DOCKER=docker|podman`. Sets the CLI tool to use to run the container. Default: `docker`.
+  * `DABUILD_PACKAGES=...`. Sets the output packages directory (must be writable). Defaults to `.../aports/packages/$DABUILD_VERSION` (cf. below).
+  * `DABUILD_RM=false|...`. Do not remove intermediate containers if set to `false`. Default: `true`.
+  * `DABUILD_VERSION=...`. Sets the Alpine version of the container in which the `abuild` invocation takes place. Default: extracted from the current branch, either  `N.N-stable` or `edge`.
+
 ## Supported architectures
 
 Currently supported architectures are (as reported by `uname -m`):
 
-  * x86
-  * x86_64
-  * aarch64
-  * armv6
-  * armv7
-  * armv7l
-  * armv8
+  * `x86`
+  * `x86_64`
+  * `aarch64`
+  * `armv6`
+  * `armv7`
+  * `armv7l`
+  * `armv8`
 
 ## Configuration
 
@@ -25,20 +39,6 @@ On invocation from within an `aports/` tree, the script will determine the root 
 ## Building without fetching
 
 Per normal usage, if you use the `-K` switch, then the build, source, etc directories will be left alone on completion. If you then invoke as `dabuild build`, then the source will not be re-fetched -- useful when you wish to edit the source to debug a package build.
-
-## Caching
-
-The script attempts to support caching via named volumes. To turn on caching, invoke as
-
-``` shell
-DABUILD_CACHE=true abuild [options]
-```
-
-To clean the cache before continuing, invoke as
-
-``` shell
-DABUILD_CACHE=true DABUILD_CLEAN=true abuild [options]
-```
 
 ## Known Issues
 
