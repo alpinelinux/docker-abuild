@@ -1,5 +1,5 @@
-local tags = ['v3.6', 'v3.7', 'v3.8', 'v3.9', 'v3.10', 'edge'];
-local tags_armv7 = ['v3.9', 'v3.10', 'edge'];
+local tags = ['v3.6', 'v3.7', 'v3.8', 'v3.9', 'v3.10', 'v3.11', 'edge'];
+local tags_armv7 = ['v3.9', 'v3.10', 'v3.11', 'edge'];
 
 local pipeline(arch, darch, tags) = {
   kind: 'pipeline',
