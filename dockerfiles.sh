@@ -1,7 +1,7 @@
 #!/bin/sh
 
 TEMPLATE="Dockerfile.in"
-RELEASES="v3.6 v3.7 v3.8 v3.9 v3.10 edge"
+RELEASES="v3.6 v3.7 v3.8 v3.9 v3.10 v3.11 edge"
 ARCHS="x86 x86_64 armhf armv7 aarch64"
 
 die() {
