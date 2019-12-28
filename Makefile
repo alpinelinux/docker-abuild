@@ -15,7 +15,7 @@ VOLS = bin etc lib sbin usr var home/builder/.ccache
 #	| jq -r '.[].name' \
 # )
 ## let's just manually specify some tags for now
-RELEASES ?= v2.6 v2.7 v3.1 v3.2 v3.3 v3.4 v3.5 v3.6 v3.7 v3.8 v3.9 v3.10 edge
+RELEASES ?= v2.6 v2.7 v3.1 v3.2 v3.3 v3.4 v3.5 v3.6 v3.7 v3.8 v3.9 v3.10 v3.11 edge
 ARCH := $(shell uname -m)
 
 dabuild: dabuild.in
