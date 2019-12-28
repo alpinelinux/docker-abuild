@@ -81,6 +81,11 @@ if [ -w "/var/cache/distfiles" ]; then
   ABUILD_VOLUMES="$ABUILD_VOLUMES -v /var/cache/distfiles:/var/cache/distfiles"
 fi
 
+# pass over gitconfig for abuild-keygen
+if [ -f "$HOME/.gitconfig" ]; then
+  ABUILD_VOLUMES="$ABUILD_VOLUMES -v $HOME/.gitconfig:/home/builder/.gitconfig"
+fi
+
 if [ "$DABUILD_CACHE" = "true" ]; then
   for v in %%ABUILD_VOLUMES%% ; do
     vol=abuild-$ABUILD_VERSION-$DABUILD_ARCH-${v//\//_}
