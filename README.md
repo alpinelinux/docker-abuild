@@ -40,12 +40,13 @@ On invocation from within an `aports/` tree, the script will determine the root 
 
 Per normal usage, if you use the `-K` switch, then the build, source, etc directories will be left alone on completion. If you then invoke as `dabuild build`, then the source will not be re-fetched -- useful when you wish to edit the source to debug a package build.
 
-## Problems with multi-arch support
+## Configure multi-arch support
 
 Docker-for-Mac comes with multi-arch support (by configuring `binfmt_misc` in the Linux VM to use `qemu-$ARCH-static`) out of the box. If you are running on native Docker for Linux, then you can install similar support via
 
 ``` shell
-docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+docker run --rm --privileged \
+    multiarch/qemu-user-static --reset --persistent yes --credential yes
 ```
 
 Note that this may reconfigure any existing `binfmt_misc` setup that you have. See <https://github.com/multiarch/qemu-user-static> for more detail.
