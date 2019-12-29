@@ -40,6 +40,18 @@ On invocation from within an `aports/` tree, the script will determine the root 
 
 Per normal usage, if you use the `-K` switch, then the build, source, etc directories will be left alone on completion. If you then invoke as `dabuild build`, then the source will not be re-fetched -- useful when you wish to edit the source to debug a package build.
 
+## `sudo: effective uid is not 0`
+
+If you see an error such as
+
+``` shell
+sudo: effective uid is not 0, is /usr/bin/sudo on a file system with the 'nosuid' option set or an NFS file system without root privileges
+```
+
+...when running on a non-native architecture, then it is likely that the configuration flags for `binfmt_misc` (by which Docker automatically invokes `qemu` to support non-native architecture containers) are not correct. Edit the `binfmt` configuration, `/usr/bin/binfmt.d/${arch}.conf` (<https://en.wikipedia.org/wiki/Binfmt_misc>) to change the flag to `OCF`.
+
+Observed on ArchLinux by `@z3ntu`, reported and fixed [docker-abuild#47](https://github.com/alpinelinux/docker-abuild/issues/47).
+
 ## Known Issues
 
   * Docker doesn't support IPv6 well, so if a package's tests make use of IPv6 they may well fail. Observed with `community/libgdata` and [fixed](https://github.com/alpinelinux/aports/pull/7597).
