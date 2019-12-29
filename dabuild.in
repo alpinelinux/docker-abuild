@@ -70,7 +70,6 @@ fi
 
 ## setup volumes; use named volumes as cache if desired
 ABUILD_VOLUMES="-v ${HOME}/.abuild:/home/builder/.abuild \
-  -v ${HOME}/.ccache:/home/builder/.ccache \
   -v ${PWD%/aports/*}/aports:/home/builder/aports \
   -v ${ABUILD_PACKAGES}:/home/builder/packages"
 
