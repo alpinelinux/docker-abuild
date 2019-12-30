@@ -5,7 +5,7 @@
 
 ORG = alpinelinux
 IMG = $(ORG)/docker-abuild
-VOLS = bin etc lib sbin usr var home/builder/.ccache
+VOLS = bin etc lib sbin usr var
 # BRANCHES := $(shell \
 #	curl -s https://api.github.com/repos/alpinelinux/aports/branches \
 #	| jq -r '.[].name' \
