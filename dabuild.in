@@ -73,6 +73,19 @@ ABUILD_VOLUMES="-v ${HOME}/.abuild:/home/builder/.abuild \
   -v ${PWD%/aports/*}/aports:/home/builder/aports \
   -v ${ABUILD_PACKAGES}:/home/builder/packages"
 
+dabuild_mkvol () {
+  vol=$1
+  if [ "$DABUILD_CLEAN" = "true" ]; then
+    ## clean the cache if requested
+    docker rm -f $(docker ps -qaf "volume=$vol") >/dev/null 2>&1 || true
+    docker volume rm $vol >/dev/null
+  fi
+
+  if docker volume ls -f 'name=$vol' | grep $vol >/dev/null ; then
+    docker volume create $vol >/dev/null
+  fi
+}
+
 ## if we have ~/.ccache on host, bind-mount it; else use named per-arch volumes
 if [ -w "$HOME/.ccache" ]; then
   ccvol=$HOME/.ccache/$DABUILD_ARCH
@@ -81,15 +94,7 @@ if [ -w "$HOME/.ccache" ]; then
   fi
 else
   ccvol=abuild-$ABUILD_VERSION-$DABUILD_ARCH-ccache
-  if [ "$DABUILD_CLEAN" = "true" ]; then
-    ## clean the cache if requested
-    $_DOCKER rm -f $($_DOCKER ps -qaf "volume=$ccvol") >/dev/null 2>&1 || true
-    $_DOCKER volume rm $ccvol >/dev/null
-  fi
-
-  if $_DOCKER volume ls -f 'name=$v' | grep $v >/dev/null ; then
-    $_DOCKER volume create $ccvol >/dev/null
-  fi
+  dabuild_mkvol $ccvol
 fi
 ABUILD_VOLUMES="$ABUILD_VOLUMES -v $ccvol:/home/builder/.ccache"
 
@@ -104,15 +109,7 @@ fi
 if [ "$DABUILD_CACHE" = "true" ]; then
   for v in %%ABUILD_VOLUMES%% ; do
     vol=abuild-$ABUILD_VERSION-$DABUILD_ARCH-${v//\//_}
-    if [ "$DABUILD_CLEAN" = "true" ]; then
-      ## clean the cache if requested
-      docker rm -f $(docker ps -qaf "volume=$vol") >/dev/null 2>&1 || true
-      docker volume rm $vol >/dev/null
-    fi
-
-    if docker volume ls -f 'name=$v' | grep $v >/dev/null ; then
-      docker volume create $vol >/dev/null
-    fi
+    dabuild_mkvol $vol
     ABUILD_VOLUMES="$ABUILD_VOLUMES -v $vol:/$v"
   done
 fi
