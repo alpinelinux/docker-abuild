@@ -3,7 +3,7 @@
 set -eu
 
 readonly NAMESPACE="${NAMESPACE:=alpinelinux}"
-readonly PROJECT="${PROJECT:=docker-alpine}"
+readonly PROJECT="${PROJECT:=docker-abuild}"
 readonly ARCHES="${ARCHES:=x86 x86_64 armhf armv7 aarch64 ppc64le s390x}"
 readonly TEMPLATE="Dockerfile.in"
 
@@ -34,8 +34,8 @@ build() {
 		sed -e "s/%%ALPINE_IMG%%/$(arch_to_image $arch)/" \
 			-e "s/%%ALPINE_TAG%%/${RELEASE/v/}/" \
 			-e "s/%%ALPINE_REL%%/$RELEASE/" "$TEMPLATE" > Dockerfile
-		docker build --no-cache -t "$NAMESPACE/$PROJECT:$RELEASE-$arch" . || \
-			die "Failed to build docker-abuild:$RELEASE-$arch"
+		docker build --no-cache -t "$NAMESPACE/$PROJECT:${RELEASE/v/}-$arch" . || \
+			die "Failed to build docker-abuild:${RELEASE/v/}-$arch"
 	done
 }
 
@@ -45,8 +45,8 @@ push() {
 
 	for arch in $ARCHES; do
 		[ "$RELEASE" = "v3.8" ] && [ "$arch" = "armv7" ] && continue
-		docker push "$NAMESPACE/$PROJECT:$RELEASE-$arch" || \
-			die "Failed to push docker-abuild:$RELEASE-$arch"
+		docker push "$NAMESPACE/$PROJECT:${RELEASE/v/}-$arch" || \
+			die "Failed to push docker-abuild:${RELEASE/v/}-$arch"
 	done
 }
 
@@ -58,7 +58,7 @@ manifest() {
 
 	for arch in $ARCHES; do
 		[ "$RELEASE" = "v3.8" ] && [ "$arch" = "armv7" ] && continue
-		images="$images $NAMESPACE/$PROJECT:$RELEASE-$arch"
+		images="$images $NAMESPACE/$PROJECT:${RELEASE/v/}-$arch"
 	done
 
 	docker manifest create --amend "$NAMESPACE/$PROJECT" $images || \
