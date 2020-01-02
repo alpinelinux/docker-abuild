@@ -1,4 +1,4 @@
-FROM alpine:%%ALPINE_TAG%%
+FROM %%ALPINE_IMG%%/alpine:%%ALPINE_TAG%%
 MAINTAINER Richard Mortier <mort@cantab.net>
 
 RUN rm /etc/apk/repositories && \

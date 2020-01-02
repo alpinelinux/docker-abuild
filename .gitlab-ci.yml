@@ -1,0 +1,103 @@
+image: alpinelinux/docker-cli
+stages:
+  - build
+  - push
+  - manifest
+  - cleanup
+
+# Build jobs
+
+build-v3.8:
+  stage: build
+  script:
+    - ./make_images.sh build v3.8
+
+build-v3.9:
+  stage: build
+  script:
+    - ./make_images.sh build v3.9
+
+build-v3.10:
+  stage: build
+  script:
+    - ./make_images.sh build v3.10
+
+build-v.3.11:
+  stage: build
+  script:
+    - ./make_images.sh build v3.11
+
+build-edge:
+  stage: build
+  script:
+    - ./make_images.sh build edge
+
+# Push jobs
+
+push-v3.8:
+  stage: push
+  script:
+    - ./make_images.sh push v3.8
+
+push-v3.9:
+  stage: push
+  script:
+    - ./make_images.sh push v3.9
+
+push-v3.10:
+  stage: push
+  script:
+    - ./make_images.sh push v3.10
+
+push-v.3.11:
+  stage: push
+  script:
+    - ./make_images.sh push v3.11
+
+push-edge:
+  stage: push
+  script:
+    - ./make_images.sh push edge
+
+manifest-v3.8:
+  stage: manifest
+  variables:
+    DOCKER_CLI_EXPERIMENTAL: enabled
+  script:
+    - ./make_images.sh manifest v3.8
+
+manifest-v3.9:
+  stage: manifest
+  variables:
+    DOCKER_CLI_EXPERIMENTAL: enabled
+  script:
+    - ./make_images.sh manifest v3.9
+
+manifest-v3.10:
+  stage: manifest
+  variables:
+    DOCKER_CLI_EXPERIMENTAL: enabled
+  script:
+    - ./make_images.sh manifest v3.10
+
+manifest-v3.11:
+  stage: manifest
+  variables:
+    DOCKER_CLI_EXPERIMENTAL: enabled
+  script:
+    - ./make_images.sh manifest v3.11
+
+manifest-edge:
+  stage: manifest
+  variables:
+    DOCKER_CLI_EXPERIMENTAL: enabled
+  script:
+    - ./make_images.sh manifest edge
+
+# cleanup images/layers
+
+cleanup:
+  stage: cleanup
+  script:
+    - docker system prune --force
+
