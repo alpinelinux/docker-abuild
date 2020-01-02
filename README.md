@@ -20,15 +20,9 @@ When invoked, `dabuild` simply passes any flags through to `abuild` running in a
 
 ## Supported architectures
 
-Currently supported architectures are (as reported by `uname -m`):
+Currently supported architectures are:
 
-  * `x86`
-  * `x86_64`
-  * `aarch64`
-  * `armv6`
-  * `armv7`
-  * `armv7l`
-  * `armv8`
+`aarch64`, `armhf`, `armv7`, `ppc64le`, `s390x`, `x86`, `x86_64`
 
 ## Configuration
 
