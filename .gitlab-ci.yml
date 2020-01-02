@@ -1,4 +1,5 @@
 image: alpinelinux/docker-cli
+
 stages:
   - build
   - push
@@ -7,90 +8,108 @@ stages:
 
 # Build jobs
 
-build-v3.8:
+.build:
   stage: build
+  only:
+    changes:
+      - Dockerfile.in
+      - make_images.sh
+      - entrypoint.sh
+
+build-v3.8:
+  extends: .build
   script:
     - ./make_images.sh build v3.8
 
 build-v3.9:
-  stage: build
+  extends: .build
   script:
     - ./make_images.sh build v3.9
 
 build-v3.10:
-  stage: build
+  extends: .build
   script:
     - ./make_images.sh build v3.10
 
 build-v.3.11:
-  stage: build
+  extends: .build
   script:
     - ./make_images.sh build v3.11
 
 build-edge:
-  stage: build
+  extends: .build
   script:
     - ./make_images.sh build edge
 
 # Push jobs
 
-push-v3.8:
+.push:
   stage: push
+  only:
+    changes:
+      - Dockerfile.in
+      - make_images.sh
+      - entrypoint.sh
+
+push-v3.8:
+  extends: .push
   script:
     - ./make_images.sh push v3.8
 
 push-v3.9:
-  stage: push
+  extends: .push
   script:
     - ./make_images.sh push v3.9
 
 push-v3.10:
-  stage: push
+  extends: .push
   script:
     - ./make_images.sh push v3.10
 
 push-v.3.11:
-  stage: push
+  extends: .push
   script:
     - ./make_images.sh push v3.11
 
 push-edge:
-  stage: push
+  extends: .push
   script:
     - ./make_images.sh push edge
 
-manifest-v3.8:
+# Manifest jobs
+
+.manifest:
   stage: manifest
   variables:
     DOCKER_CLI_EXPERIMENTAL: enabled
+  only:
+    changes:
+      - Dockerfile.in
+      - make_images.sh
+      - entrypoint.sh
+
+manifest-v3.8:
+  extends: .manifest
   script:
     - ./make_images.sh manifest v3.8
 
 manifest-v3.9:
-  stage: manifest
-  variables:
-    DOCKER_CLI_EXPERIMENTAL: enabled
+  extends: .manifest
   script:
     - ./make_images.sh manifest v3.9
 
 manifest-v3.10:
-  stage: manifest
-  variables:
-    DOCKER_CLI_EXPERIMENTAL: enabled
+  extends: .manifest
   script:
     - ./make_images.sh manifest v3.10
 
 manifest-v3.11:
-  stage: manifest
-  variables:
-    DOCKER_CLI_EXPERIMENTAL: enabled
+  extends: .manifest
   script:
     - ./make_images.sh manifest v3.11
 
 manifest-edge:
-  stage: manifest
-  variables:
-    DOCKER_CLI_EXPERIMENTAL: enabled
+  extends: .manifest
   script:
     - ./make_images.sh manifest edge
 
@@ -100,4 +119,9 @@ cleanup:
   stage: cleanup
   script:
     - docker system prune --force
+  only:
+    changes:
+      - Dockerfile.in
+      - make_images.sh
+      - entrypoint.sh
 
