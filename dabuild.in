@@ -10,6 +10,11 @@ die () {
   exit 1
 }
 
+# source the configuration if available
+if [ -f "/etc/dabuild.conf" ]; then
+	. /etc/dabuild.conf
+fi
+
 ## debug
 if [ "$DABUILD_DEBUG" = "true" ]; then
   set -x
