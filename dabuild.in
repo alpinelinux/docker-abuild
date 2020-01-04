@@ -45,6 +45,7 @@ case "$DABUILD_DOCKER" in
           "Expected one of: docker|podman"
       ;;
 esac
+_DOCKER=$DABUILD_DOCKER
 
 ## use branch to figure out most appropriate alpine version
 if [ "$DABUILD_VERSION" ]; then
@@ -96,12 +97,12 @@ if [ "$DABUILD_CACHE" = "true" ]; then
     vol=abuild-$ABUILD_VERSION-$DABUILD_ARCH-${v//\//_}
     if [ "$DABUILD_CLEAN" = "true" ]; then
       ## clean the cache if requested
-      docker rm -f $(docker ps -qaf "volume=$vol") >/dev/null 2>&1 || true
-      docker volume rm $vol >/dev/null
+      $_DOCKER rm -f $($_DOCKER ps -qaf "volume=$vol") >/dev/null 2>&1 || true
+      $_DOCKER volume rm $vol >/dev/null
     fi
 
-    if docker volume ls -f 'name=$v' | grep $v >/dev/null ; then
-      docker volume create $vol >/dev/null
+    if $_DOCKER volume ls -f 'name=$v' | grep $v >/dev/null ; then
+      $_DOCKER volume create $vol >/dev/null
     fi
     ABUILD_VOLUMES="$ABUILD_VOLUMES -v $vol:/$v"
   done
@@ -113,7 +114,7 @@ if [ "$DABUILD_RM" = "false" ]; then
 fi
 
 ## go!
-docker run --tty --interactive \
+$_DOCKER run --tty --interactive \
        $ABUILD_RM \
        $ABUILD_VOLUMES \
        -e DABUILD_DEBUG \
