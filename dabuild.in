@@ -30,12 +30,18 @@ if [ "${PWD%*/aports/*}" = "$PWD" ]; then
 fi
 
 ## allow setting of arch by env variable
-[ ! "$DABUILD_ARCH" ] && DABUILD_ARCH=$(uname -m)
-case "$DABUILD_ARCH" in
-  x86|x86_64|aarch64|armhf|armv7 ) ;;
+if [ "$DABUILD_ARCH" ]; then
+  ALPINE_ARCH=$DABUILD_ARCH
+else
+  ALPINE_ARCH=$(uname -m)
+fi
+
+case "$ALPINE_ARCH" in
+  x86|x86_64|aarch64|armhf|armv7);;
+  armv8l|arm) ALPINE_ARCH=armv7;;
   * ) die "Unsupported arch \"$DABUILD_ARCH\" detected." \
-          "Expected one of: x86|x86_64|aarch64|armhf|armv7" \
-          "You may force it setting DABUILD_ARCH=\"xxx\" in invocation";;
+    "Expected one of: x86|x86_64|aarch64|armhf|armv7" \
+    "You may force it setting DABUILD_ARCH=\"xxx\" in invocation";;
 esac
 
 ## allow setting of `docker` command by env variable
@@ -50,23 +56,19 @@ _DOCKER=$DABUILD_DOCKER
 
 ## use branch to figure out most appropriate alpine version
 if [ "$DABUILD_VERSION" ]; then
-  ABUILD_VERSION=$DABUILD_VERSION
+  ALPINE_RELEASE=$DABUILD_VERSION
 else
   APORTS_BRANCH=$(git status | head -1)
   APORTS_BRANCH="${APORTS_BRANCH##*[ /]}"
   case $APORTS_BRANCH in
-    [[:digit:]].[[:digit:]]-stable )
-      ABUILD_VERSION=${APORTS_BRANCH%-stable}
-      ;;
-
-    * )
-      ABUILD_VERSION=edge
-      ;;
+    [[:digit:]].[[:digit:]]-stable)
+      ALPINE_RELEASE=${APORTS_BRANCH%-stable};;
+    *) ALPINE_RELEASE=edge;;
   esac
 fi
 
 ## check $DABUILD_PACKAGES is a writable directory
-ABUILD_PACKAGES=${DABUILD_PACKAGES:-${PWD%/aports/*}/packages/${ABUILD_VERSION}}
+ABUILD_PACKAGES=${DABUILD_PACKAGES:-${PWD%/aports/*}/packages/${ALPINE_RELEASE}}
 
 mkdir -p $ABUILD_PACKAGES
 if [ ! \( -d "$ABUILD_PACKAGES" -a -w "$ABUILD_PACKAGES" \) ]; then
@@ -94,7 +96,7 @@ fi
 
 setup_named_volume() {
 	local name=$1 dest=$2 single=$3
-	local volume="dabuild-$name-$ALPINE_RELEASE-$DABUILD_ARCH"
+	local volume="dabuild-$name-$ALPINE_RELEASE-$ALPINE_ARCH"
 	[ "$single" = "true" ] && volume="dabuild-$name"
 	ABUILD_VOLUMES="$ABUILD_VOLUMES -v $volume:$dest"
 }
@@ -122,4 +124,4 @@ $_DOCKER run --tty --interactive \
        $DABUILD_ENV \
 	   $DABUILD_ARGS \
        --workdir /home/builder/aports/${PWD#*/aports/} \
-       %%ABUILD_IMAGE%%:$ABUILD_VERSION-$DABUILD_ARCH "$@"
+       %%ABUILD_IMAGE%%:$ALPINE_RELEASE-$ALPINE_ARCH "$@"
