@@ -7,12 +7,17 @@ manage_config() {
 		-v dabuild-config:/mnt/abuild alpine sh
 }
 
+list_volumes() {
+	docker volume ls --quiet --filter name="^dabuild"
+}
+
 usage() {
 	cat <<- EOF
 	dabuild: version (unknown)
 
 	Available commands:
 	  config: access abuild configuration
+	  volumes: list created dabuild volumes
 	  help: this help screen
 	EOF
 }
@@ -20,6 +25,7 @@ usage() {
 
 case $cmd in
 	config) manage_config;;
+	volumes) list_volumes;;
 	help) usage;;
 	*) usage; exit 1;;
 esac
