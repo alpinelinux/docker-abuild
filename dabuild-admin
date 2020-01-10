@@ -1,0 +1,25 @@
+#!/bin/sh
+
+readonly cmd=$1
+
+manage_config() {
+	docker run --user 1000:1000 --rm -it --workdir /mnt/abuild \
+		-v dabuild-config:/mnt/abuild alpine sh
+}
+
+usage() {
+	cat <<- EOF
+	dabuild: version (unknown)
+
+	Available commands:
+	  config: access abuild configuration
+	  help: this help screen
+	EOF
+}
+
+
+case $cmd in
+	config) manage_config;;
+	help) usage;;
+	*) usage; exit 1;;
+esac
