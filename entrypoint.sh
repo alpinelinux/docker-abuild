@@ -13,10 +13,8 @@ if [ "$DABUILD_DEBUG" = "true" ]; then
   PS4='$LINENO: '
 fi
 
-## check can write to ~/.abuild
-if [ ! -w "$HOME/.abuild/" ]; then
-  die "Error: unwritable ~/.abuild [$(ls -lad ~/.abuild | cut -d " " -f 1)]"
-fi
+# enable ccache if requested
+[ "$DABUILD_CCACHE" = "true" ] && export USE_CCACHE=1
 
 ## generate signing keys on first run
 if [ ! -r "$HOME/.abuild/abuild.conf" ]; then
@@ -29,6 +27,16 @@ fi
     abuild-keygen -n -a
   fi
 )
+
+# make sure distfiles has correct permissions
+sudo install -d -m 775 -g abuild /var/cache/distfiles
+
+# correct permissions of user volumes
+for vpath in /home/builder/.ccache /home/builder/.abuild \
+	/home/builder/packages
+do
+	[ -d "$vpath" ] && sudo chown builder:builder "$vpath"
+done
 
 sudo cp -v "$HOME"/.abuild/*.rsa.pub /etc/apk/keys/
 sudo apk -U upgrade -a

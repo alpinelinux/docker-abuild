@@ -19,6 +19,7 @@ fi
 if [ "$DABUILD_DEBUG" = "true" ]; then
   set -x
   PS4='$LINENO: '
+  DABUILD_ENV="$DABUILD_ENV -e DABUILD_DEBUG=true"
 fi
 
 ## check running from within an `aports` tree
@@ -75,8 +76,7 @@ if [ ! \( -d "$ABUILD_PACKAGES" -a -w "$ABUILD_PACKAGES" \) ]; then
 fi
 
 ## setup volumes; use named volumes as cache if desired
-ABUILD_VOLUMES="-v ${HOME}/.abuild:/home/builder/.abuild \
-  -v ${PWD%/aports/*}/aports:/home/builder/aports \
+ABUILD_VOLUMES="-v ${PWD%/aports/*}/aports:/home/builder/aports \
   -v ${ABUILD_PACKAGES}:/home/builder/packages"
 
 if [ -f "/etc/abuild.conf" ]; then
@@ -92,21 +92,23 @@ if [ -f "$HOME/.gitconfig" ]; then
   ABUILD_VOLUMES="$ABUILD_VOLUMES -v $HOME/.gitconfig:/home/builder/.gitconfig"
 fi
 
-if [ "$DABUILD_CACHE" = "true" ]; then
-  for v in %%ABUILD_VOLUMES%% ; do
-    vol=abuild-$ABUILD_VERSION-$DABUILD_ARCH-${v//\//_}
-    if [ "$DABUILD_CLEAN" = "true" ]; then
-      ## clean the cache if requested
-      $_DOCKER rm -f $($_DOCKER ps -qaf "volume=$vol") >/dev/null 2>&1 || true
-      $_DOCKER volume rm $vol >/dev/null
-    fi
+setup_named_volume() {
+	local name=$1 dest=$2 single=$3
+	local volume="dabuild-$name-$ALPINE_RELEASE-$DABUILD_ARCH"
+	[ "$single" = "true" ] && volume="dabuild-$name"
+	ABUILD_VOLUMES="$ABUILD_VOLUMES -v $volume:$dest"
+}
 
-    if $_DOCKER volume ls -f 'name=$v' | grep $v >/dev/null ; then
-      $_DOCKER volume create $vol >/dev/null
-    fi
-    ABUILD_VOLUMES="$ABUILD_VOLUMES -v $vol:/$v"
-  done
+if [ "$DABUILD_APK_CACHE" = "true" ]; then
+	setup_named_volume apkcache "/etc/apk/cache"
 fi
+
+if [ "$DABUILD_CCACHE" = "true" ]; then
+	setup_named_volume ccache "/home/builder/.ccache"
+	DABUILD_ENV="$DABUILD_ENV -e DABUILD_CCACHE=true"
+fi
+
+setup_named_volume config "/home/builder/.abuild" true
 
 ABUILD_RM="--rm"
 if [ "$DABUILD_RM" = "false" ]; then
@@ -117,7 +119,7 @@ fi
 $_DOCKER run --tty --interactive \
        $ABUILD_RM \
        $ABUILD_VOLUMES \
-       -e DABUILD_DEBUG \
-       $DABUILD_ARGS \
+       $DABUILD_ENV \
+	   $DABUILD_ARGS \
        --workdir /home/builder/aports/${PWD#*/aports/} \
        %%ABUILD_IMAGE%%:$ABUILD_VERSION-$DABUILD_ARCH "$@"
