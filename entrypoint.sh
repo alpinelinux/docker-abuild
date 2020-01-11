@@ -16,6 +16,15 @@ fi
 # enable ccache if requested
 [ "$DABUILD_CCACHE" = "true" ] && export USE_CCACHE=1
 
+# set some abuild defaults on first run
+if [ ! -f "$HOME/.abuild/abuild.conf" ]; then
+	mkdir -p "$HOME"/.abuild/
+	cat <<- EOF > "$HOME"/.abuild/abuild.conf
+	export JOBS=\$(nproc)
+	export MAKEFLAGS=-j\$JOBS
+	EOF
+fi
+
 # generate new abuild key if not set
 if ! grep -sq "^PACKAGER_PRIVKEY=" "$HOME"/.abuild/abuild.conf; then
 	abuild-keygen -n -a
