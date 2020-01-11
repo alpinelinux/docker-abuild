@@ -16,17 +16,10 @@ fi
 # enable ccache if requested
 [ "$DABUILD_CCACHE" = "true" ] && export USE_CCACHE=1
 
-## generate signing keys on first run
-if [ ! -r "$HOME/.abuild/abuild.conf" ]; then
-  abuild-keygen -n -a
+# generate new abuild key if not set
+if ! grep -sq "^PACKAGER_PRIVKEY=" "$HOME"/.abuild/abuild.conf; then
+	abuild-keygen -n -a
 fi
-
-(
-  . "$HOME/.abuild/abuild.conf"
-  if [ ! -s "$PACKAGER_PRIVKEY" ]; then
-    abuild-keygen -n -a
-  fi
-)
 
 # make sure distfiles has correct permissions
 sudo install -d -m 775 -g abuild /var/cache/distfiles
