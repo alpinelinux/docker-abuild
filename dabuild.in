@@ -81,10 +81,6 @@ fi
 ABUILD_VOLUMES="-v ${PWD%/aports/*}/aports:/home/builder/aports \
   -v ${ABUILD_PACKAGES}:/home/builder/packages"
 
-if [ -w "/var/cache/distfiles" ]; then
-  ABUILD_VOLUMES="$ABUILD_VOLUMES -v /var/cache/distfiles:/var/cache/distfiles"
-fi
-
 # pass over gitconfig for abuild-keygen
 if [ -f "$HOME/.gitconfig" ]; then
   ABUILD_VOLUMES="$ABUILD_VOLUMES -v $HOME/.gitconfig:/home/builder/.gitconfig"
@@ -105,6 +101,14 @@ if [ "$DABUILD_CCACHE" = "true" ]; then
 	setup_named_volume ccache "/home/builder/.ccache"
 	DABUILD_ENV="$DABUILD_ENV -e DABUILD_CCACHE=true"
 fi
+
+# use a bind or named volume for distfiles.
+DABUILD_DISTFILES=${DABUILD_DISTFILES:-false}
+case $DABUILD_DISTFILES in
+	*/*) ABUILD_VOLUMES="$ABUILD_VOLUMES -v $DABUILD_DISTFILES:/var/cache/distfiles";;
+	true) setup_named_volume distfiles "/var/cache/distfiles" true;;
+	*) ;;
+esac
 
 setup_named_volume config "/home/builder/.abuild" true
 
