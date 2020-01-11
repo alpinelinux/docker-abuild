@@ -11,6 +11,11 @@ list_volumes() {
 	docker volume ls --quiet --filter name="^dabuild"
 }
 
+enable_multiarch() {
+	docker run --rm --privileged multiarch/qemu-user-static \
+		--reset --persistent yes --credential yes
+}
+
 usage() {
 	cat <<- EOF
 	dabuild: version (unknown)
@@ -18,6 +23,7 @@ usage() {
 	Available commands:
 	  config: access abuild configuration
 	  volumes: list created dabuild volumes
+	  multiarch: enable docker multi-arch support
 	  help: this help screen
 	EOF
 }
@@ -26,6 +32,7 @@ usage() {
 case $cmd in
 	config) manage_config;;
 	volumes) list_volumes;;
+	multiarch) enable_multiarch;;
 	help) usage;;
 	*) usage; exit 1;;
 esac
