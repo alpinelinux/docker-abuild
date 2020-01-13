@@ -67,15 +67,9 @@ else
   esac
 fi
 
-## check $DABUILD_PACKAGES is a writable directory
+## set packages directory based on aports location if not set
+## FIXME this will not append release dir if set manually
 ABUILD_PACKAGES=${DABUILD_PACKAGES:-${PWD%/aports/*}/packages/${ALPINE_RELEASE}}
-
-mkdir -p $ABUILD_PACKAGES
-if [ ! \( -d "$ABUILD_PACKAGES" -a -w "$ABUILD_PACKAGES" \) ]; then
-  die "Error: invalid or unwritable packages directory specified!" \
-      "ABUILD_PACKAGES = '$ABUILD_PACKAGES'" \
-      "DABUILD_PACKAGES = '$DABUILD_PACKAGES'"
-fi
 
 ## setup volumes; use named volumes as cache if desired
 ABUILD_VOLUMES="-v ${PWD%/aports/*}/aports:/home/builder/aports \
