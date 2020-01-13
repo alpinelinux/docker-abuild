@@ -3,17 +3,32 @@
 # Copyright (C) 2019 Richard Mortier <mort@cantab.net>
 # Licensed under the MIT License, https://opensource.org/licenses/MIT
 
-set -e
-
-die () {
-  printf >&2 "%s\n" "$@"
-  exit 1
-}
+set -eu
 
 # source the configuration if available
 if [ -f "/etc/dabuild.conf" ]; then
 	. /etc/dabuild.conf
 fi
+
+# set defaults
+: "${DABUILD_DEBUG:=false}"
+: "${DABUILD_ARCH:=$(uname -m)}"
+: "${DABUILD_DOCKER:=docker}"
+: "${DABUILD_VERSION=}"
+: "${DABUILD_PACKAGES:=${PWD%/aports/*}/packages}}"
+: "${DABUILD_APK_CACHE:=true}"
+: "${DABUILD_CCACHE:=false}"
+: "${DABUILD_DISTFILES:=false}"
+: "${DABUILD_RM:=true}"
+: "${DABUILD_ARGS=}"
+
+# reset vars
+DABUILD_ENV=
+
+die () {
+  printf >&2 "%s\n" "$@"
+  exit 1
+}
 
 ## debug
 if [ "$DABUILD_DEBUG" = "true" ]; then
@@ -29,23 +44,15 @@ if [ "${PWD%*/aports/*}" = "$PWD" ]; then
   exit 1
 fi
 
-## allow setting of arch by env variable
-if [ "$DABUILD_ARCH" ]; then
-  ALPINE_ARCH=$DABUILD_ARCH
-else
-  ALPINE_ARCH=$(uname -m)
-fi
-
-case "$ALPINE_ARCH" in
+case "$DABUILD_ARCH" in
   x86|x86_64|aarch64|armhf|armv7);;
-  armv8l|arm) ALPINE_ARCH=armv7;;
+  armv8l|arm) DABUILD_ARCH=armv7;;
   * ) die "Unsupported arch \"$DABUILD_ARCH\" detected." \
     "Expected one of: x86|x86_64|aarch64|armhf|armv7" \
     "You may force it setting DABUILD_ARCH=\"xxx\" in invocation";;
 esac
 
 ## allow setting of `docker` command by env variable
-[ ! "$DABUILD_DOCKER" ] && DABUILD_DOCKER=docker
 case "$DABUILD_DOCKER" in
   podman|docker ) ;;
   * ) die "Unsupported docker CLI replacement \"$DABUILD_DOCKER\" detected." \
@@ -55,24 +62,21 @@ esac
 _DOCKER=$DABUILD_DOCKER
 
 ## use branch to figure out most appropriate alpine version
-if [ "$DABUILD_VERSION" ]; then
-  ALPINE_RELEASE=$DABUILD_VERSION
-else
+if [ ! "$DABUILD_VERSION" ]; then
   APORTS_BRANCH=$(git symbolic-ref --short -q HEAD)
   case $APORTS_BRANCH in
     [[:digit:]].[[:digit:]]-stable)
       ALPINE_RELEASE=${APORTS_BRANCH%-stable};;
-    *) ALPINE_RELEASE=edge;;
+    *) DABUILD_VERSION=edge;;
   esac
 fi
 
-## set packages directory based on aports location if not set
-## FIXME this will not append release dir if set manually
-ABUILD_PACKAGES=${DABUILD_PACKAGES:-${PWD%/aports/*}/packages/${ALPINE_RELEASE}}
+# set packages dir based on alpine release
+DABUILD_PACKAGES="$DABUILD_PACKAGES/$DABUILD_VERSION"
 
 ## setup volumes; use named volumes as cache if desired
 ABUILD_VOLUMES="-v ${PWD%/aports/*}/aports:/home/builder/aports \
-  -v ${ABUILD_PACKAGES}:/home/builder/packages"
+  -v ${DABUILD_PACKAGES}:/home/builder/packages"
 
 # pass over gitconfig for abuild-keygen
 if [ -f "$HOME/.gitconfig" ]; then
@@ -80,8 +84,8 @@ if [ -f "$HOME/.gitconfig" ]; then
 fi
 
 setup_named_volume() {
-	local name=$1 dest=$2 single=$3
-	local volume="dabuild-$name-$ALPINE_RELEASE-$ALPINE_ARCH"
+	local name=$1 dest=$2 single="${3:-false}"
+	local volume="dabuild-$name-$DABUILD_VERSION-$DABUILD_ARCH"
 	[ "$single" = "true" ] && volume="dabuild-$name"
 	ABUILD_VOLUMES="$ABUILD_VOLUMES -v $volume:$dest"
 }
@@ -96,7 +100,6 @@ if [ "$DABUILD_CCACHE" = "true" ]; then
 fi
 
 # use a bind or named volume for distfiles.
-DABUILD_DISTFILES=${DABUILD_DISTFILES:-false}
 case $DABUILD_DISTFILES in
 	*/*) ABUILD_VOLUMES="$ABUILD_VOLUMES -v $DABUILD_DISTFILES:/var/cache/distfiles";;
 	true) setup_named_volume distfiles "/var/cache/distfiles" true;;
@@ -105,16 +108,14 @@ esac
 
 setup_named_volume config "/home/builder/.abuild" true
 
-ABUILD_RM="--rm"
-if [ "$DABUILD_RM" = "false" ]; then
-  ABUILD_RM=""
+if [ "$DABUILD_RM" != "false" ]; then
+	DABUILD_ARGS="$DABUILD_ARGS --rm"
 fi
 
 ## go!
 $_DOCKER run --tty --interactive \
-       $ABUILD_RM \
        $ABUILD_VOLUMES \
        $DABUILD_ENV \
 	   $DABUILD_ARGS \
        --workdir /home/builder/aports/${PWD#*/aports/} \
-       %%ABUILD_IMAGE%%:$ALPINE_RELEASE-$ALPINE_ARCH "$@"
+       %%ABUILD_IMAGE%%:$DABUILD_VERSION-$DABUILD_ARCH "$@"
