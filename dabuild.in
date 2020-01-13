@@ -65,8 +65,7 @@ _DOCKER=$DABUILD_DOCKER
 if [ ! "$DABUILD_VERSION" ]; then
   APORTS_BRANCH=$(git symbolic-ref --short -q HEAD)
   case $APORTS_BRANCH in
-    [[:digit:]].[[:digit:]]-stable)
-      ALPINE_RELEASE=${APORTS_BRANCH%-stable};;
+    *-stable) DABUILD_VERSION=${APORTS_BRANCH%-stable};;
     *) DABUILD_VERSION=edge;;
   esac
 fi
