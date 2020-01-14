@@ -1,6 +1,8 @@
 #!/bin/sh
 
-readonly cmd=$1
+set -eu
+
+readonly cmd=${1:-help}
 
 manage_config() {
 	docker run --user 1000:1000 --rm -it --workdir /mnt/abuild \
