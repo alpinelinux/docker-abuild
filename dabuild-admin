@@ -2,7 +2,9 @@
 
 set -eu
 
-readonly cmd=${1:-help}
+readonly CMD=${1:-help}
+readonly VERSION=unknown
+readonly PROGRAM=${0##*/}
 
 die() {
 	echo "$@" >&2
@@ -45,7 +47,7 @@ multiarch() {
 
 multiarch_usage() {
 	cat <<- EOF
-	dabuild: version (unknown)
+	$PROGRAM ($VERSION)
 
 	Available subcommands:
 	  enable: enable multi-arch support via binfmt_misc
@@ -56,7 +58,7 @@ multiarch_usage() {
 
 usage() {
 	cat <<- EOF
-	dabuild: version (unknown)
+	$PROGRAM ($VERSION)
 
 	Available commands:
 	  config: access abuild configuration
@@ -66,7 +68,7 @@ usage() {
 	EOF
 }
 
-case $cmd in
+case $CMD in
 	config) manage_config;;
 	volumes) list_volumes;;
 	multiarch) multiarch "$@";;
