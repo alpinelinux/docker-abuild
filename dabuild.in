@@ -64,10 +64,13 @@ else
   esac
 fi
 
-## check $DABUILD_PACKAGES is a writable directory
 ABUILD_PACKAGES=${DABUILD_PACKAGES:-${PWD%/aports/*}/packages/${ABUILD_VERSION}}
 
-mkdir -p $ABUILD_PACKAGES
+# docker will create mount points as root if not available so create them first
+# use uid 1000 as this is the uid of the builder user in the container
+install -d -o 1000 -g 1000 "$ABUILD_PACKAGES" "$HOME"/.abuild
+
+## check $DABUILD_PACKAGES is a writable directory
 if [ ! \( -d "$ABUILD_PACKAGES" -a -w "$ABUILD_PACKAGES" \) ]; then
   die "Error: invalid or unwritable packages directory specified!" \
       "ABUILD_PACKAGES = '$ABUILD_PACKAGES'" \
