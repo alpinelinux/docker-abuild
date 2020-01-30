@@ -1,0 +1,77 @@
+#!/bin/sh
+
+set -eu
+
+readonly CMD=${1:-help}
+readonly VERSION=unknown
+readonly PROGRAM=${0##*/}
+
+die() {
+	echo "$@" >&2
+	exit 1
+}
+
+ask() {
+	local question="$1"
+	while true; do
+		# SC2039 -p is non posix but widely available
+		read -rp "$question" yn
+		case $yn in
+			[Yy]) return 0;;
+			[Nn]) exit;;
+			*) echo "Please answer y/n.";;
+		esac
+	done
+}
+
+manage_config() {
+	docker run --user 1000:1000 --rm -it --workdir /mnt/abuild \
+		-v dabuild-config:/mnt/abuild alpine sh
+}
+
+list_volumes() {
+	docker volume ls --quiet --filter name="^dabuild"
+}
+
+multiarch() {
+	case "${2:-help}" in
+		enable) ask "Are you sure you want to enable multi-arch system wide? (y/n): "
+			docker run --rm --privileged multiarch/qemu-user-static \
+				--reset --persistent yes --credential yes ;;
+		disable) sudo --prompt="Sudo password:" find /proc/sys/fs/binfmt_misc \
+			-type f -name 'qemu-*' -exec sh -c 'echo -1 > {}' \; ;;
+		help) multiarch_usage ;;
+		*) die "Unknown subcommand \"$2\"" ;;
+	esac
+}
+
+multiarch_usage() {
+	cat <<- EOF
+	$PROGRAM ($VERSION)
+
+	Available subcommands:
+	  enable: enable multi-arch support via binfmt_misc
+	  disable: disable mutli-arch support
+	  help: this help screen
+	EOF
+}
+
+usage() {
+	cat <<- EOF
+	$PROGRAM ($VERSION)
+
+	Available commands:
+	  config: access abuild configuration
+	  volumes: list created dabuild volumes
+	  multiarch: enable docker multi-arch support
+	  help: this help screen
+	EOF
+}
+
+case $CMD in
+	config) manage_config;;
+	volumes) list_volumes;;
+	multiarch) multiarch "$@";;
+	help) usage;;
+	*) usage; exit 1;;
+esac
