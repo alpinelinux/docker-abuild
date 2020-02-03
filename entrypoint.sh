@@ -18,7 +18,7 @@ fi
 
 # set some abuild defaults on first run
 if [ ! -f "$HOME/.abuild/abuild.conf" ]; then
-	mkdir -p "$HOME"/.abuild/
+	sudo install -d -o builder -g builder "$HOME"/.abuild/
 	cat <<- EOF > "$HOME"/.abuild/abuild.conf
 	export JOBS=\$(nproc)
 	export MAKEFLAGS=-j\$JOBS
