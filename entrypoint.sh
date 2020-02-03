@@ -16,9 +16,11 @@ fi
 # enable ccache if requested
 [ "$DABUILD_CCACHE" = "true" ] && export USE_CCACHE=1
 
+# create or correct permissions of abuild config dir
+sudo install -d -o builder -g builder "$HOME"/.abuild/
+
 # set some abuild defaults on first run
 if [ ! -f "$HOME/.abuild/abuild.conf" ]; then
-	sudo install -d -o builder -g builder "$HOME"/.abuild/
 	cat <<- EOF > "$HOME"/.abuild/abuild.conf
 	export JOBS=\$(nproc)
 	export MAKEFLAGS=-j\$JOBS
