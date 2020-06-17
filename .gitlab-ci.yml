@@ -10,8 +10,8 @@ stages:
 
 .build:
   stage: build
-  only:
-    changes:
+  rules:
+    - changes:
       - Dockerfile.in
       - make_images.sh
       - entrypoint.sh
@@ -45,11 +45,12 @@ build-edge:
 
 .push:
   stage: push
-  only:
-    changes:
-      - Dockerfile.in
-      - make_images.sh
-      - entrypoint.sh
+  rules:
+    - if: '$CI_PROJECT_PATH == "alpine/docker-abuild" && $CI_COMMIT_BRANCH == "master"'
+      changes:
+        - Dockerfile.in
+        - make_images.sh
+        - entrypoint.sh
 
 push-v3.8:
   extends: .push
@@ -82,11 +83,12 @@ push-edge:
   stage: manifest
   variables:
     DOCKER_CLI_EXPERIMENTAL: enabled
-  only:
-    changes:
-      - Dockerfile.in
-      - make_images.sh
-      - entrypoint.sh
+  rules:
+    - if: '$CI_PROJECT_PATH == "alpine/docker-abuild" && $CI_COMMIT_BRANCH == "master"'
+      changes:
+        - Dockerfile.in
+        - make_images.sh
+        - entrypoint.sh
 
 manifest-v3.8:
   extends: .manifest
@@ -119,9 +121,10 @@ cleanup:
   stage: cleanup
   script:
     - docker system prune --force
-  only:
-    changes:
-      - Dockerfile.in
-      - make_images.sh
-      - entrypoint.sh
+  rules:
+    - if: '$CI_PROJECT_PATH == "alpine/docker-abuild" && $CI_COMMIT_BRANCH == "master"'
+      changes:
+        - Dockerfile.in
+        - make_images.sh
+        - entrypoint.sh
 
