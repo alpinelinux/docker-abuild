@@ -1,50 +1,10 @@
-image: alpinelinux/docker-cli
+image: alpine
 
 stages:
-  - build
-  - push
-  - manifest
-  - cleanup
+  - config
+  - child
 
-# Build jobs
-
-.build:
-  stage: build
-  rules:
-    - changes:
-      - Dockerfile.in
-      - make_images.sh
-      - entrypoint.sh
-
-build-v3.8:
-  extends: .build
-  script:
-    - ./make_images.sh build v3.8
-
-build-v3.9:
-  extends: .build
-  script:
-    - ./make_images.sh build v3.9
-
-build-v3.10:
-  extends: .build
-  script:
-    - ./make_images.sh build v3.10
-
-build-v.3.11:
-  extends: .build
-  script:
-    - ./make_images.sh build v3.11
-
-build-edge:
-  extends: .build
-  script:
-    - ./make_images.sh build edge
-
-# Push jobs
-
-.push:
-  stage: push
+.default:
   rules:
     - if: '$CI_PROJECT_PATH == "alpine/docker-abuild" && $CI_COMMIT_BRANCH == "master"'
       changes:
@@ -52,79 +12,20 @@ build-edge:
         - make_images.sh
         - entrypoint.sh
 
-push-v3.8:
-  extends: .push
+generate-yml:
+  stage: config
+  extends: .default
   script:
-    - ./make_images.sh push v3.8
+    - apk add --no-cache jq curl
+    - ./mkyml.sh > child-pipeline.yml
+  artifacts:
+    paths:
+      - child-pipeline.yml
 
-push-v3.9:
-  extends: .push
-  script:
-    - ./make_images.sh push v3.9
-
-push-v3.10:
-  extends: .push
-  script:
-    - ./make_images.sh push v3.10
-
-push-v.3.11:
-  extends: .push
-  script:
-    - ./make_images.sh push v3.11
-
-push-edge:
-  extends: .push
-  script:
-    - ./make_images.sh push edge
-
-# Manifest jobs
-
-.manifest:
-  stage: manifest
-  variables:
-    DOCKER_CLI_EXPERIMENTAL: enabled
-  rules:
-    - if: '$CI_PROJECT_PATH == "alpine/docker-abuild" && $CI_COMMIT_BRANCH == "master"'
-      changes:
-        - Dockerfile.in
-        - make_images.sh
-        - entrypoint.sh
-
-manifest-v3.8:
-  extends: .manifest
-  script:
-    - ./make_images.sh manifest v3.8
-
-manifest-v3.9:
-  extends: .manifest
-  script:
-    - ./make_images.sh manifest v3.9
-
-manifest-v3.10:
-  extends: .manifest
-  script:
-    - ./make_images.sh manifest v3.10
-
-manifest-v3.11:
-  extends: .manifest
-  script:
-    - ./make_images.sh manifest v3.11
-
-manifest-edge:
-  extends: .manifest
-  script:
-    - ./make_images.sh manifest edge
-
-# cleanup images/layers
-
-cleanup:
-  stage: cleanup
-  script:
-    - docker system prune --force
-  rules:
-    - if: '$CI_PROJECT_PATH == "alpine/docker-abuild" && $CI_COMMIT_BRANCH == "master"'
-      changes:
-        - Dockerfile.in
-        - make_images.sh
-        - entrypoint.sh
-
+child-pipeline:
+  stage: child
+  extends: .default
+  trigger:
+    include:
+      - artifact: child-pipeline.yml
+        job: generate-yml
