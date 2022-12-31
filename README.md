@@ -1,7 +1,5 @@
 # docker-abuild
 
-[![Build Status](https://cloud.drone.io/api/badges/alpinelinux/docker-abuild/status.svg)](https://cloud.drone.io/alpinelinux/docker-abuild)
-
 A Docker-ised `abuild` for invocation from within an `aports/` tree. Attempts to auto-detect which branch of `aports/` is checked out, and use an appropriately based container for running `abuild`.
 
 ## Invocation
