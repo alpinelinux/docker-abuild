@@ -17,6 +17,7 @@ create-child-ci:
   only:
     - triggers
     - web
+    - schedules
 
 build:
   stage: build
@@ -30,4 +31,5 @@ build:
   only:
     - triggers
     - web
+    - schedules
 
