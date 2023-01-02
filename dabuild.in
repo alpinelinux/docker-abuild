@@ -46,8 +46,9 @@ fi
 case "$DABUILD_ARCH" in
 	x86|x86_64|aarch64|armhf|armv7);;
 	armv8l|arm) DABUILD_ARCH=armv7;;
+	arm64) DABUILD_ARCH=aarch64;; # macos arm
 	*) die "Unsupported arch \"$DABUILD_ARCH\" detected." \
-		"Expected one of: x86|x86_64|aarch64|armhf|armv7" \
+		"Expected one of: x86|x86_64|aarch64|armhf|armv7|arm64" \
 		"You may force it setting DABUILD_ARCH=\"xxx\" in invocation";;
 esac
 
