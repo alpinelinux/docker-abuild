@@ -1,10 +1,9 @@
-FROM %%ALPINE_IMG%%/alpine:%%ALPINE_TAG%%
-MAINTAINER Richard Mortier <mort@cantab.net>
+FROM alpine:{{tag}}
 
 RUN rm /etc/apk/repositories && \
     printf -- >> /etc/apk/repositories \
-      'http://dl-cdn.alpinelinux.org/alpine/%%ALPINE_REL%%/%s\n' \
-      main community $(test edge = "%%ALPINE_TAG%%" && echo testing) && \
+      'http://dl-cdn.alpinelinux.org/alpine/{{release}}/%s\n' \
+      main community $(test edge = "{{release}}" && echo testing) && \
     printf -- >> /etc/apk/repositories \
       '/home/builder/packages/%s\n' \
       main community testing

@@ -117,4 +117,4 @@ $_DOCKER run --tty --interactive \
 	$DABUILD_ENV \
 	$DABUILD_ARGS \
 	--workdir /home/builder/aports/"${PWD#*/aports/}" \
-	%%ABUILD_IMAGE%%:$DABUILD_VERSION-$DABUILD_ARCH "$@"
+	%%ABUILD_IMAGE%%:$DABUILD_VERSION "$@"

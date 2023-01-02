@@ -3,7 +3,7 @@
 
 .DEFAULT_GOAL := dabuild
 
-ORG = alpinelinux
+ORG = registry.alpinelinux.org/alpine
 IMG = $(ORG)/docker-abuild
 VOLS = bin etc lib sbin usr var home/builder/.ccache
 # BRANCHES := $(shell \
@@ -31,7 +31,7 @@ images: $(patsubst %, build-%, $(RELEASES))
 
 .PHONY: build-%
 build-%:
-	sed 's!%%ALPINE_TAG%%!$(subst v,,$*)!;s!%%ALPINE_REL%%!$*!' \
+	sed 's!{{tag}}!$(subst v,,$*)!;s!{{release}}!$*!' \
 		Dockerfile.in >| Dockerfile
 # XXX probably because I'm on an edge release of Docker for Mac with a beta
 # engine, DOCKER_BUILDKIT appears to have some strange behaviour so turning
