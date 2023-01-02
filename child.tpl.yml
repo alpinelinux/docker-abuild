@@ -49,7 +49,7 @@ publish-{{branch.rel_branch}}:
     - $ARCH
   variables:
     EXEC_COMMAND: publish
-    DOCKER_TAG: {{branch.rel_branch|trim('v')}}
+    DOCKER_TAG: "{{branch.rel_branch|trim('v')}}"
 
 manifest-{{branch.rel_branch}}:
   stage: manifest
@@ -60,7 +60,7 @@ manifest-{{branch.rel_branch}}:
   variables:
     EXEC_COMMAND: manifest
     MANIFEST_ARCHES: {% for arch in branch.arches %}{{arch}} {% endfor +%}
-    DOCKER_TAG: {{branch.rel_branch|trim('v')}}
+    DOCKER_TAG: "{{branch.rel_branch|trim('v')}}"
   tags:
     - ci-docker-image
     - x86_64
