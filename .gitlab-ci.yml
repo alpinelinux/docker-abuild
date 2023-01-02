@@ -7,7 +7,7 @@ create-child-ci:
   image: alpine
   script:
     - apk add py3-jinja2
-    - ./build.py
+    - ./create-child-ci.py
   tags:
     - ci-build
     - x86_64

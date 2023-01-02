@@ -27,3 +27,4 @@ for branch in data['release_branches'][0:5]:
                 tag=tag, release=release).dump(outfile)
         f.close()
     shutil.copyfile('entrypoint.sh', ('out/{}/entrypoint.sh').format(release))
+    shutil.copymode('entrypoint.sh', ('out/{}/entrypoint.sh').format(release))
