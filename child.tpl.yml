@@ -1,6 +1,5 @@
 stages:
   - build
-  - publish
   - manifest
 
 .build:
@@ -10,13 +9,6 @@ stages:
     pull_policy: always
   script: [pwd]
     
-.publish:
-  stage: publish
-  image:
-    name: registry.alpinelinux.org/alpine/infra/docker/exec/docker-image:latest
-    pull_policy: always
-  script: [pwd]
-
 {% for branch in data %}
 build-{{branch.rel_branch}}:
   extends: .build
@@ -30,26 +22,12 @@ build-{{branch.rel_branch}}:
     - ci-docker-image
     - $ARCH
   variables:
-    EXEC_COMMAND: build
+    EXEC_COMMAND: build_publish
     SUBDIR: out/{{branch.rel_branch}}
+    DOCKER_TAG: "{{branch.rel_branch|trim('v')}}"
   needs:
     - pipeline: $PARENT_PIPELINE_ID
       job: create-child-ci
-
-publish-{{branch.rel_branch}}:
-  extends: .publish
-  parallel:
-    matrix:
-      - ARCH:
-      {% for arch in branch.arches %}
-        - {{arch}}
-      {% endfor %}
-  tags:
-    - ci-docker-image 
-    - $ARCH
-  variables:
-    EXEC_COMMAND: publish
-    DOCKER_TAG: "{{branch.rel_branch|trim('v')}}"
 
 manifest-{{branch.rel_branch}}:
   stage: manifest
