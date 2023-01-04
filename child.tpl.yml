@@ -42,5 +42,6 @@ manifest-{{branch.rel_branch}}:
   tags:
     - ci-docker-image
     - x86_64
+  needs: ["build-{{branch.rel_branch}}"]
 
 {% endfor %}
