@@ -12,7 +12,7 @@ fi
 
 # set defaults
 : "${DABUILD_DEBUG:=false}"
-: "${DABUILD_ARCH:=$(uname -m)}"
+: "${DABUILD_ARCH:=$(arch)}"
 : "${DABUILD_DOCKER:=docker}"
 : "${DABUILD_VERSION=}"
 : "${DABUILD_PACKAGES:=${PWD%/aports/*}/packages}}"
@@ -44,13 +44,23 @@ if [ "${PWD%*/aports/*}" = "$PWD" ]; then
 fi
 
 case "$DABUILD_ARCH" in
-	x86|x86_64|aarch64|armhf|armv7);;
-	armv8l|arm) DABUILD_ARCH=armv7;;
-	arm64) DABUILD_ARCH=aarch64;; # macos arm
+	x86_64) PLATFORM=linux/amd64;;
+	x86) PLATFORM=linux/i386;;
+	aarch64|arm64) PLATFORM=linux/arm64/v8; DABUILD_ARCH=aarch64;;
+	armv7|armv8l|arm) PLATFORM=linux/arm/v7; DABUILD_ARCH=armv7;;
+	armhf) PLATFORM=linux/arm/v6;;
+	ppc64le) PLATFORM=linux/ppc64le;;
+	s390x) PLATFORM=linux/s390x;;
+	riscv64) PLATFORM=linux/riscv64;;
 	*) die "Unsupported arch \"$DABUILD_ARCH\" detected." \
 		"Expected one of: x86|x86_64|aarch64|armhf|armv7|arm64" \
 		"You may force it setting DABUILD_ARCH=\"xxx\" in invocation";;
 esac
+
+## multi-arch support needs to pull the right platform container
+if [ "$(arch)" != "$DABUILD_ARCH" ]; then
+	DABUILD_PLATFORM="--platform $PLATFORM"
+fi
 
 ## allow setting of `docker` command by env variable
 case "$DABUILD_DOCKER" in
@@ -114,6 +124,7 @@ fi
 
 ## go!
 $_DOCKER run --tty --interactive \
+	$DABUILD_PLATFORM \
 	$ABUILD_VOLUMES \
 	$DABUILD_ENV \
 	$DABUILD_ARGS \
