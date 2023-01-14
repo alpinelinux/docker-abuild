@@ -21,6 +21,7 @@ fi
 : "${DABUILD_DISTFILES:=false}"
 : "${DABUILD_RM:=true}"
 : "${DABUILD_ARGS=}"
+: "${DABUILD_PLATFORM=}"
 
 # reset vars
 DABUILD_ENV=
