@@ -12,7 +12,7 @@ fi
 
 # set defaults
 : "${DABUILD_DEBUG:=false}"
-: "${DABUILD_ARCH:=$(arch)}"
+: "${DABUILD_ARCH:=$(uname -m)}"
 : "${DABUILD_DOCKER:=docker}"
 : "${DABUILD_VERSION=}"
 : "${DABUILD_PACKAGES:=${PWD%/aports/*}/packages}}"
