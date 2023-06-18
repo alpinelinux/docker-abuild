@@ -59,7 +59,7 @@ case "$DABUILD_ARCH" in
 esac
 
 ## multi-arch support needs to pull the right platform container
-if [ "$(arch)" != "$DABUILD_ARCH" ]; then
+if [ "$(uname -m)" != "$DABUILD_ARCH" ]; then
 	DABUILD_PLATFORM="--platform $PLATFORM"
 fi
 
