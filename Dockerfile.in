@@ -1,4 +1,4 @@
-FROM alpine:{{tag}}
+FROM registry.alpinelinux.org/img/alpine:{{tag}}
 
 RUN rm /etc/apk/repositories && \
     printf -- >> /etc/apk/repositories \
